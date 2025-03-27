@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Mercadorias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        h1 {
+            color: #1f2937;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(90deg, #0284c7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-container {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #0284c7, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .form-group button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #pesquisa {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #pesquisa:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th {
+            background: linear-gradient(90deg, #0284c7, #06b6d4);
+            color: white;
+            padding: 14px;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            color: #1f2937;
+        }
+
+        tr {
+            transition: background 0.2s;
+        }
+
+        tr:hover {
+            background: #f1f5f9;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #f43f5e;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .delete-btn:hover {
+            background: #e11d48;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .modal-buttons button:first-child {
+            background: linear-gradient(90deg, #0284c7, #06b6d4);
+            color: white;
+        }
+
+        .modal-buttons button:first-child:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .modal-buttons button:last-child {
+            background: #6b7280;
+            color: white;
+        }
+
+        .modal-buttons button:last-child:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Mercadorias</h1>
+        
+        <div class="form-container">
+            <div class="form-group">
+                <input type="text" id="nomeMercadoria" placeholder="Nome da Mercadoria">
+            </div>
+            <div class="form-group">
+                <input type="number" id="valorKg" placeholder="Valor por Kg" step="0.01">
+            </div>
+            <div class="form-group">
+                <button onclick="cadastrarMercadoria()">Cadastrar</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="pesquisa" placeholder="Pesquisar mercadoria..." onkeyup="pesquisarMercadoria()">
+        </div>
+
+        <table id="tabelaMercadorias">
+            <thead>
+                <tr>
+                    <th>Mercadoria</th>
+                    <th>Valor por Kg</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="listaMercadorias"></tbody>
+        </table>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Editar Mercadoria</h3>
+            <input type="text" id="editNome" placeholder="Nome da Mercadoria">
+            <input type="number" id="editValor" placeholder="Valor por Kg" step="0.01">
+            <div class="modal-buttons">
+                <button onclick="salvarEdicao()">Salvar</button>
+                <button onclick="fecharModal('editModal')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir esta mercadoria?</p>
+            <div class="modal-buttons">
+                <button onclick="confirmarExclusao()">Sim</button>
+                <button onclick="fecharModal('deleteModal')">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mercadorias = [];
+        let editIndex = -1;
+        let deleteIndex = -1;
+
+        function cadastrarMercadoria() {
+            const nome = document.getElementById('nomeMercadoria').value;
+            const valor = parseFloat(document.getElementById('valorKg').value);
+
+            if (nome && !isNaN(valor)) {
+                mercadorias.push({ nome: nome, valor: valor });
+                atualizarTabela();
+                document.getElementById('nomeMercadoria').value = '';
+                document.getElementById('valorKg').value = '';
+            } else {
+                alert('Por favor, preencha todos os campos corretamente!');
+            }
+        }
+
+        function atualizarTabela(lista = mercadorias) {
+            const tbody = document.getElementById('listaMercadorias');
+            tbody.innerHTML = '';
+
+            lista.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td onclick="abrirModalEdicao(${index})">${item.nome}</td>
+                    <td onclick="abrirModalEdicao(${index})">R$ ${item.valor.toFixed(2)}</td>
+                    <td><button class="delete-btn" onclick="abrirModalExclusao(${index})">Excluir</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function abrirModalEdicao(index) {
+            editIndex = index;
+            const modal = document.getElementById('editModal');
+            document.getElementById('editNome').value = mercadorias[index].nome;
+            document.getElementById('editValor').value = mercadorias[index].valor;
+            modal.style.display = 'block';
+        }
+
+        function salvarEdicao() {
+            const nome = document.getElementById('editNome').value;
+            const valor = parseFloat(document.getElementById('editValor').value);
+            
+            if (nome && !isNaN(valor)) {
+                mercadorias[editIndex] = { nome: nome, valor: valor };
+                atualizarTabela();
+                fecharModal('editModal');
+            } else {
+                alert('Preencha todos os campos corretamente!');
+            }
+        }
+
+        function abrirModalExclusao(index) {
+            deleteIndex = index;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function confirmarExclusao() {
+            mercadorias.splice(deleteIndex, 1);
+            atualizarTabela();
+            fecharModal('deleteModal');
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function pesquisarMercadoria() {
+            const termo = document.getElementById('pesquisa').value.toLowerCase();
+            const filtradas = mercadorias.filter(item => 
+                item.nome.toLowerCase().includes(termo)
+            );
+            atualizarTabela(filtradas);
+        }
+
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target === editModal) fecharModal('editModal');
+            if (event.target === deleteModal) fecharModal('deleteModal');
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
