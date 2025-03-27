@@ -304,76 +304,142 @@
         </div>
     </div>
 
-    <script>
-        let mercadorias = [];
-        let editIndex = -1;
-        let deleteIndex = -1;
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
 
-        function cadastrarMercadoria() {
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBjV8gvvp3-BKkUtFCdCNJ4ighhL-lFH4",
+            authDomain: "mercadorias-mae.firebaseapp.com",
+            projectId: "mercadorias-mae",
+            storageBucket: "mercadorias-mae.firebasestorage.app",
+            messagingSenderId: "817388818914",
+            appId: "1:817388818914:web:58bca4718b0f143c9e29bb",
+            measurementId: "G-YBBJEVYKDX"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const mercadoriasCollection = db.collection('mercadorias');
+
+        let mercadorias = [];
+        let editId = null;
+        let deleteId = null;
+
+        // Carregar mercadorias do Firestore
+        function carregarMercadorias() {
+            mercadoriasCollection.onSnapshot((snapshot) => {
+                mercadorias = [];
+                snapshot.forEach((doc) => {
+                    mercadorias.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                atualizarTabela();
+            }, (error) => {
+                console.error("Erro ao carregar mercadorias:", error);
+            });
+        }
+
+        // Cadastrar nova mercadoria
+        async function cadastrarMercadoria() {
             const nome = document.getElementById('nomeMercadoria').value;
             const valor = parseFloat(document.getElementById('valorKg').value);
 
             if (nome && !isNaN(valor)) {
-                mercadorias.push({ nome: nome, valor: valor });
-                atualizarTabela();
-                document.getElementById('nomeMercadoria').value = '';
-                document.getElementById('valorKg').value = '';
+                try {
+                    await mercadoriasCollection.add({
+                        nome: nome,
+                        valor: valor,
+                        criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    document.getElementById('nomeMercadoria').value = '';
+                    document.getElementById('valorKg').value = '';
+                } catch (error) {
+                    console.error("Erro ao cadastrar:", error);
+                    alert('Erro ao cadastrar a mercadoria!');
+                }
             } else {
                 alert('Por favor, preencha todos os campos corretamente!');
             }
         }
 
+        // Atualizar tabela
         function atualizarTabela(lista = mercadorias) {
             const tbody = document.getElementById('listaMercadorias');
             tbody.innerHTML = '';
 
-            lista.forEach((item, index) => {
+            lista.forEach((item) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td onclick="abrirModalEdicao(${index})">${item.nome}</td>
-                    <td onclick="abrirModalEdicao(${index})">R$ ${item.valor.toFixed(2)}</td>
-                    <td><button class="delete-btn" onclick="abrirModalExclusao(${index})">Excluir</button></td>
+                    <td onclick="abrirModalEdicao('${item.id}')">${item.nome}</td>
+                    <td onclick="abrirModalEdicao('${item.id}')">R$ ${item.valor.toFixed(2)}</td>
+                    <td><button class="delete-btn" onclick="abrirModalExclusao('${item.id}')">Excluir</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function abrirModalEdicao(index) {
-            editIndex = index;
+        // Abrir modal de edição
+        function abrirModalEdicao(id) {
+            const mercadoria = mercadorias.find(item => item.id === id);
+            editId = id;
             const modal = document.getElementById('editModal');
-            document.getElementById('editNome').value = mercadorias[index].nome;
-            document.getElementById('editValor').value = mercadorias[index].valor;
+            document.getElementById('editNome').value = mercadoria.nome;
+            document.getElementById('editValor').value = mercadoria.valor;
             modal.style.display = 'block';
         }
 
-        function salvarEdicao() {
+        // Salvar edição
+        async function salvarEdicao() {
             const nome = document.getElementById('editNome').value;
             const valor = parseFloat(document.getElementById('editValor').value);
             
             if (nome && !isNaN(valor)) {
-                mercadorias[editIndex] = { nome: nome, valor: valor };
-                atualizarTabela();
-                fecharModal('editModal');
+                try {
+                    await mercadoriasCollection.doc(editId).update({
+                        nome: nome,
+                       
+
+ valor: valor
+                    });
+                    fecharModal('editModal');
+                } catch (error) {
+                    console.error("Erro ao editar:", error);
+                    alert('Erro ao salvar a edição!');
+                }
             } else {
                 alert('Preencha todos os campos corretamente!');
             }
         }
 
-        function abrirModalExclusao(index) {
-            deleteIndex = index;
+        // Abrir modal de exclusão
+        function abrirModalExclusao(id) {
+            deleteId = id;
             document.getElementById('deleteModal').style.display = 'block';
         }
 
-        function confirmarExclusao() {
-            mercadorias.splice(deleteIndex, 1);
-            atualizarTabela();
-            fecharModal('deleteModal');
+        // Confirmar exclusão
+        async function confirmarExclusao() {
+            try {
+                await mercadoriasCollection.doc(deleteId).delete();
+                fecharModal('deleteModal');
+            } catch (error) {
+                console.error("Erro ao excluir:", error);
+                alert('Erro ao excluir a mercadoria!');
+            }
         }
 
+        // Fechar modal
         function fecharModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
+        // Pesquisar mercadoria
         function pesquisarMercadoria() {
             const termo = document.getElementById('pesquisa').value.toLowerCase();
             const filtradas = mercadorias.filter(item => 
@@ -382,14 +448,16 @@
             atualizarTabela(filtradas);
         }
 
+        // Fechar modal clicando fora
         window.onclick = function(event) {
             const editModal = document.getElementById('editModal');
             const deleteModal = document.getElementById('deleteModal');
             if (event.target === editModal) fecharModal('editModal');
             if (event.target === deleteModal) fecharModal('deleteModal');
         }
+
+        // Iniciar carregamento das mercadorias
+        carregarMercadorias();
     </script>
-</head>
-<body>
 </body>
 </html>
