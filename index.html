@@ -341,7 +341,8 @@
                 });
                 atualizarTabela();
             }, (error) => {
-                console.error("Erro ao carregar mercadorias:", error);
+                console.error("Erro ao carregar mercadorias:", error.message, error.code);
+                alert('Erro ao carregar mercadorias: ' + error.message);
             });
         }
 
@@ -360,8 +361,8 @@
                     document.getElementById('nomeMercadoria').value = '';
                     document.getElementById('valorKg').value = '';
                 } catch (error) {
-                    console.error("Erro ao cadastrar:", error);
-                    alert('Erro ao cadastrar a mercadoria!');
+                    console.error("Detalhes do erro ao cadastrar:", error.message, error.code);
+                    alert('Erro ao cadastrar a mercadoria: ' + error.message);
                 }
             } else {
                 alert('Por favor, preencha todos os campos corretamente!');
@@ -403,14 +404,12 @@
                 try {
                     await mercadoriasCollection.doc(editId).update({
                         nome: nome,
-                       
-
- valor: valor
+                        valor: valor
                     });
                     fecharModal('editModal');
                 } catch (error) {
-                    console.error("Erro ao editar:", error);
-                    alert('Erro ao salvar a edição!');
+                    console.error("Erro ao editar:", error.message, error.code);
+                    alert('Erro ao salvar a edição: ' + error.message);
                 }
             } else {
                 alert('Preencha todos os campos corretamente!');
@@ -429,8 +428,8 @@
                 await mercadoriasCollection.doc(deleteId).delete();
                 fecharModal('deleteModal');
             } catch (error) {
-                console.error("Erro ao excluir:", error);
-                alert('Erro ao excluir a mercadoria!');
+                console.error("Erro ao excluir:", error.message, error.code);
+                alert('Erro ao excluir a mercadoria: ' + error.message);
             }
         }
 
