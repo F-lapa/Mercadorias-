@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Mercadorias</title>
-    <!-- Adicionando um favicon para evitar o erro 404 -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style>
+        /* CSS mantido igual ao original */
         * {
             margin: 0;
             padding: 0;
@@ -164,7 +164,6 @@
             transform: translateY(-1px);
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -306,9 +305,9 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+    <!-- Firebase SDK (usando versão compatível com uso global) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <script>
         // Configuração do Firebase
@@ -322,146 +321,142 @@
             measurementId: "G-YBBJEVYKDX"
         };
 
-        // Garantir que o código só execute após o DOM e os scripts do Firebase carregarem
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar Firebase
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            const mercadoriasCollection = db.collection('mercadorias');
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const mercadoriasCollection = db.collection('mercadorias');
 
-            let mercadorias = [];
-            let editId = null;
-            let deleteId = null;
+        let mercadorias = [];
+        let editId = null;
+        let deleteId = null;
 
-            // Carregar mercadorias do Firestore
-            function carregarMercadorias() {
-                mercadoriasCollection.onSnapshot((snapshot) => {
-                    mercadorias = [];
-                    snapshot.forEach((doc) => {
-                        mercadorias.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
+        // Carregar mercadorias do Firestore
+        function carregarMercadorias() {
+            mercadoriasCollection.onSnapshot((snapshot) => {
+                mercadorias = [];
+                snapshot.forEach((doc) => {
+                    mercadorias.push({
+                        id: doc.id,
+                        ...doc.data()
                     });
-                    atualizarTabela();
-                }, (error) => {
-                    console.error("Erro ao carregar mercadorias:", error.message, error.code);
-                    alert('Erro ao carregar mercadorias: ' + error.message);
                 });
-            }
+                atualizarTabela();
+            }, (error) => {
+                console.error("Erro ao carregar mercadorias:", error.message, error.code);
+                alert('Erro ao carregar mercadorias: ' + error.message);
+            });
+        }
 
-            // Cadastrar nova mercadoria
-            window.cadastrarMercadoria = async function() {
-                const nome = document.getElementById('nomeMercadoria').value;
-                const valor = parseFloat(document.getElementById('valorKg').value);
+        // Cadastrar nova mercadoria
+        function cadastrarMercadoria() {
+            const nome = document.getElementById('nomeMercadoria').value;
+            const valor = parseFloat(document.getElementById('valorKg').value);
 
-                if (nome && !isNaN(valor)) {
-                    try {
-                        await mercadoriasCollection.add({
-                            nome: nome,
-                            valor: valor,
-                            criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        document.getElementById('nomeMercadoria').value = '';
-                        document.getElementById('valorKg').value = '';
-                    } catch (error) {
-                        console.error("Detalhes do erro ao cadastrar:", error.message, error.code);
-                        alert('Erro ao cadastrar a mercadoria: ' + error.message);
-                    }
-                } else {
-                    alert('Por favor, preencha todos os campos corretamente!');
-                }
-            }
-
-            // Atualizar tabela
-            function atualizarTabela(lista = mercadorias) {
-                const tbody = document.getElementById('listaMercadorias');
-                tbody.innerHTML = '';
-
-                lista.forEach((item) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td onclick="abrirModalEdicao('${item.id}')">${item.nome}</td>
-                        <td onclick="abrirModalEdicao('${item.id}')">R$ ${item.valor.toFixed(2)}</td>
-                        <td><button class="delete-btn" onclick="abrirModalExclusao('${item.id}')">Excluir</button></td>
-                    `;
-                    tbody.appendChild(tr);
+            if (nome && !isNaN(valor)) {
+                mercadoriasCollection.add({
+                    nome: nome,
+                    valor: valor,
+                    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    document.getElementById('nomeMercadoria').value = '';
+                    document.getElementById('valorKg').value = '';
+                }).catch((error) => {
+                    console.error("Detalhes do erro ao cadastrar:", error.message, error.code);
+                    alert('Erro ao cadastrar a mercadoria: ' + error.message);
                 });
+            } else {
+                alert('Por favor, preencha todos os campos corretamente!');
             }
+        }
 
-            // Abrir modal de edição
-            window.abrirModalEdicao = function(id) {
-                const mercadoria = mercadorias.find(item => item.id === id);
-                editId = id;
-                const modal = document.getElementById('editModal');
-                document.getElementById('editNome').value = mercadoria.nome;
-                document.getElementById('editValor').value = mercadoria.valor;
-                modal.style.display = 'block';
+        // Atualizar tabela
+        function atualizarTabela(lista = mercadorias) {
+            const tbody = document.getElementById('listaMercadorias');
+            tbody.innerHTML = '';
+
+            lista.forEach((item) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td onclick="abrirModalEdicao('${item.id}')">${item.nome}</td>
+                    <td onclick="abrirModalEdicao('${item.id}')">R$ ${item.valor.toFixed(2)}</td>
+                    <td><button class="delete-btn" onclick="abrirModalExclusao('${item.id}')">Excluir</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Abrir modal de edição
+        function abrirModalEdicao(id) {
+            const mercadoria = mercadorias.find(item => item.id === id);
+            editId = id;
+            const modal = document.getElementById('editModal');
+            document.getElementById('editNome').value = mercadoria.nome;
+            document.getElementById('editValor').value = mercadoria.valor;
+            modal.style.display = 'block';
+        }
+
+        // Salvar edição
+        function salvarEdicao() {
+            const nome = document.getElementById('editNome').value;
+            const valor = parseFloat(document.getElementById('editValor').value);
+            
+            if (nome && !isNaN(valor)) {
+                mercadoriasCollection.doc(editId).update({
+                    nome: nome,
+                    valor: valor
+                }).then(() => {
+                    fecharModal('editModal');
+                }).catch((error) => {
+                    console.error("Erro ao editar:", error.message, error.code);
+                    alert('Erro ao salvar a edição: ' + error.message);
+                });
+            } else {
+                alert('Preencha todos os campos corretamente!');
             }
+        }
 
-            // Salvar edição
-            window.salvarEdicao = async function() {
-                const nome = document.getElementById('editNome').value;
-                const valor = parseFloat(document.getElementById('editValor').value);
-                
-                if (nome && !isNaN(valor)) {
-                    try {
-                        await mercadoriasCollection.doc(editId).update({
-                            nome: nome,
-                            valor: valor
-                        });
-                        fecharModal('editModal');
-                    } catch (error) {
-                        console.error("Erro ao editar:", error.message, error.code);
-                        alert('Erro ao salvar a edição: ' + error.message);
-                    }
-                } else {
-                    alert('Preencha todos os campos corretamente!');
-                }
-            }
+        // Abrir modal de exclusão
+        function abrirModalExclusao(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
 
-            // Abrir modal de exclusão
-            window.abrirModalExclusao = function(id) {
-                deleteId = id;
-                document.getElementById('deleteModal').style.display = 'block';
-            }
-
-            // Confirmar exclusão
-            window.confirmarExclusao = async function() {
-                try {
-                    await mercadoriasCollection.doc(deleteId).delete();
+        // Confirmar exclusão
+        function confirmarExclusao() {
+            mercadoriasCollection.doc(deleteId).delete()
+                .then(() => {
                     fecharModal('deleteModal');
-                } catch (error) {
+                })
+                .catch((error) => {
                     console.error("Erro ao excluir:", error.message, error.code);
                     alert('Erro ao excluir a mercadoria: ' + error.message);
-                }
-            }
+                });
+        }
 
-            // Fechar modal
-            window.fecharModal = function(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-            }
+        // Fechar modal
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
 
-            // Pesquisar mercadoria
-            window.pesquisarMercadoria = function() {
-                const termo = document.getElementById('pesquisa').value.toLowerCase();
-                const filtradas = mercadorias.filter(item => 
-                    item.nome.toLowerCase().includes(termo)
-                );
-                atualizarTabela(filtradas);
-            }
+        // Pesquisar mercadoria
+        function pesquisarMercadoria() {
+            const termo = document.getElementById('pesquisa').value.toLowerCase();
+            const filtradas = mercadorias.filter(item => 
+                item.nome.toLowerCase().includes(termo)
+            );
+            atualizarTabela(filtradas);
+        }
 
-            // Fechar modal clicando fora
-            window.onclick = function(event) {
-                const editModal = document.getElementById('editModal');
-                const deleteModal = document.getElementById('deleteModal');
-                if (event.target === editModal) fecharModal('editModal');
-                if (event.target === deleteModal) fecharModal('deleteModal');
-            }
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target === editModal) fecharModal('editModal');
+            if (event.target === deleteModal) fecharModal('deleteModal');
+        }
 
-            // Iniciar carregamento das mercadorias
-            carregarMercadorias();
-        });
+        // Iniciar carregamento das mercadorias
+        carregarMercadorias();
     </script>
 </body>
 </html>
