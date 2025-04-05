@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Mercadorias</title>
+    <!-- Adicionando um favicon para evitar o erro 404 -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
@@ -320,143 +322,146 @@
             measurementId: "G-YBBJEVYKDX"
         };
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const mercadoriasCollection = db.collection('mercadorias');
+        // Garantir que o código só execute após o DOM e os scripts do Firebase carregarem
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const mercadoriasCollection = db.collection('mercadorias');
 
-        let mercadorias = [];
-        let editId = null;
-        let deleteId = null;
+            let mercadorias = [];
+            let editId = null;
+            let deleteId = null;
 
-        // Carregar mercadorias do Firestore
-        function carregarMercadorias() {
-            mercadoriasCollection.onSnapshot((snapshot) => {
-                mercadorias = [];
-                snapshot.forEach((doc) => {
-                    mercadorias.push({
-                        id: doc.id,
-                        ...doc.data()
+            // Carregar mercadorias do Firestore
+            function carregarMercadorias() {
+                mercadoriasCollection.onSnapshot((snapshot) => {
+                    mercadorias = [];
+                    snapshot.forEach((doc) => {
+                        mercadorias.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
                     });
+                    atualizarTabela();
+                }, (error) => {
+                    console.error("Erro ao carregar mercadorias:", error.message, error.code);
+                    alert('Erro ao carregar mercadorias: ' + error.message);
                 });
-                atualizarTabela();
-            }, (error) => {
-                console.error("Erro ao carregar mercadorias:", error.message, error.code);
-                alert('Erro ao carregar mercadorias: ' + error.message);
-            });
-        }
+            }
 
-        // Cadastrar nova mercadoria
-        async function cadastrarMercadoria() {
-            const nome = document.getElementById('nomeMercadoria').value;
-            const valor = parseFloat(document.getElementById('valorKg').value);
+            // Cadastrar nova mercadoria
+            window.cadastrarMercadoria = async function() {
+                const nome = document.getElementById('nomeMercadoria').value;
+                const valor = parseFloat(document.getElementById('valorKg').value);
 
-            if (nome && !isNaN(valor)) {
-                try {
-                    await mercadoriasCollection.add({
-                        nome: nome,
-                        valor: valor,
-                        criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    document.getElementById('nomeMercadoria').value = '';
-                    document.getElementById('valorKg').value = '';
-                } catch (error) {
-                    console.error("Detalhes do erro ao cadastrar:", error.message, error.code);
-                    alert('Erro ao cadastrar a mercadoria: ' + error.message);
+                if (nome && !isNaN(valor)) {
+                    try {
+                        await mercadoriasCollection.add({
+                            nome: nome,
+                            valor: valor,
+                            criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        document.getElementById('nomeMercadoria').value = '';
+                        document.getElementById('valorKg').value = '';
+                    } catch (error) {
+                        console.error("Detalhes do erro ao cadastrar:", error.message, error.code);
+                        alert('Erro ao cadastrar a mercadoria: ' + error.message);
+                    }
+                } else {
+                    alert('Por favor, preencha todos os campos corretamente!');
                 }
-            } else {
-                alert('Por favor, preencha todos os campos corretamente!');
             }
-        }
 
-        // Atualizar tabela
-        function atualizarTabela(lista = mercadorias) {
-            const tbody = document.getElementById('listaMercadorias');
-            tbody.innerHTML = '';
+            // Atualizar tabela
+            function atualizarTabela(lista = mercadorias) {
+                const tbody = document.getElementById('listaMercadorias');
+                tbody.innerHTML = '';
 
-            lista.forEach((item) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td onclick="abrirModalEdicao('${item.id}')">${item.nome}</td>
-                    <td onclick="abrirModalEdicao('${item.id}')">R$ ${item.valor.toFixed(2)}</td>
-                    <td><button class="delete-btn" onclick="abrirModalExclusao('${item.id}')">Excluir</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+                lista.forEach((item) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td onclick="abrirModalEdicao('${item.id}')">${item.nome}</td>
+                        <td onclick="abrirModalEdicao('${item.id}')">R$ ${item.valor.toFixed(2)}</td>
+                        <td><button class="delete-btn" onclick="abrirModalExclusao('${item.id}')">Excluir</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
 
-        // Abrir modal de edição
-        function abrirModalEdicao(id) {
-            const mercadoria = mercadorias.find(item => item.id === id);
-            editId = id;
-            const modal = document.getElementById('editModal');
-            document.getElementById('editNome').value = mercadoria.nome;
-            document.getElementById('editValor').value = mercadoria.valor;
-            modal.style.display = 'block';
-        }
+            // Abrir modal de edição
+            window.abrirModalEdicao = function(id) {
+                const mercadoria = mercadorias.find(item => item.id === id);
+                editId = id;
+                const modal = document.getElementById('editModal');
+                document.getElementById('editNome').value = mercadoria.nome;
+                document.getElementById('editValor').value = mercadoria.valor;
+                modal.style.display = 'block';
+            }
 
-        // Salvar edição
-        async function salvarEdicao() {
-            const nome = document.getElementById('editNome').value;
-            const valor = parseFloat(document.getElementById('editValor').value);
-            
-            if (nome && !isNaN(valor)) {
-                try {
-                    await mercadoriasCollection.doc(editId).update({
-                        nome: nome,
-                        valor: valor
-                    });
-                    fecharModal('editModal');
-                } catch (error) {
-                    console.error("Erro ao editar:", error.message, error.code);
-                    alert('Erro ao salvar a edição: ' + error.message);
+            // Salvar edição
+            window.salvarEdicao = async function() {
+                const nome = document.getElementById('editNome').value;
+                const valor = parseFloat(document.getElementById('editValor').value);
+                
+                if (nome && !isNaN(valor)) {
+                    try {
+                        await mercadoriasCollection.doc(editId).update({
+                            nome: nome,
+                            valor: valor
+                        });
+                        fecharModal('editModal');
+                    } catch (error) {
+                        console.error("Erro ao editar:", error.message, error.code);
+                        alert('Erro ao salvar a edição: ' + error.message);
+                    }
+                } else {
+                    alert('Preencha todos os campos corretamente!');
                 }
-            } else {
-                alert('Preencha todos os campos corretamente!');
             }
-        }
 
-        // Abrir modal de exclusão
-        function abrirModalExclusao(id) {
-            deleteId = id;
-            document.getElementById('deleteModal').style.display = 'block';
-        }
-
-        // Confirmar exclusão
-        async function confirmarExclusao() {
-            try {
-                await mercadoriasCollection.doc(deleteId).delete();
-                fecharModal('deleteModal');
-            } catch (error) {
-                console.error("Erro ao excluir:", error.message, error.code);
-                alert('Erro ao excluir a mercadoria: ' + error.message);
+            // Abrir modal de exclusão
+            window.abrirModalExclusao = function(id) {
+                deleteId = id;
+                document.getElementById('deleteModal').style.display = 'block';
             }
-        }
 
-        // Fechar modal
-        function fecharModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+            // Confirmar exclusão
+            window.confirmarExclusao = async function() {
+                try {
+                    await mercadoriasCollection.doc(deleteId).delete();
+                    fecharModal('deleteModal');
+                } catch (error) {
+                    console.error("Erro ao excluir:", error.message, error.code);
+                    alert('Erro ao excluir a mercadoria: ' + error.message);
+                }
+            }
 
-        // Pesquisar mercadoria
-        function pesquisarMercadoria() {
-            const termo = document.getElementById('pesquisa').value.toLowerCase();
-            const filtradas = mercadorias.filter(item => 
-                item.nome.toLowerCase().includes(termo)
-            );
-            atualizarTabela(filtradas);
-        }
+            // Fechar modal
+            window.fecharModal = function(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
 
-        // Fechar modal clicando fora
-        window.onclick = function(event) {
-            const editModal = document.getElementById('editModal');
-            const deleteModal = document.getElementById('deleteModal');
-            if (event.target === editModal) fecharModal('editModal');
-            if (event.target === deleteModal) fecharModal('deleteModal');
-        }
+            // Pesquisar mercadoria
+            window.pesquisarMercadoria = function() {
+                const termo = document.getElementById('pesquisa').value.toLowerCase();
+                const filtradas = mercadorias.filter(item => 
+                    item.nome.toLowerCase().includes(termo)
+                );
+                atualizarTabela(filtradas);
+            }
 
-        // Iniciar carregamento das mercadorias
-        carregarMercadorias();
+            // Fechar modal clicando fora
+            window.onclick = function(event) {
+                const editModal = document.getElementById('editModal');
+                const deleteModal = document.getElementById('deleteModal');
+                if (event.target === editModal) fecharModal('editModal');
+                if (event.target === deleteModal) fecharModal('deleteModal');
+            }
+
+            // Iniciar carregamento das mercadorias
+            carregarMercadorias();
+        });
     </script>
 </body>
 </html>
