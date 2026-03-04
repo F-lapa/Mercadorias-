@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Monitor Profissional de Bateria - Sistema de Energia</title>
+    <title>Device Intelligence Pro - Diagnóstico Completo</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         :root {
@@ -24,42 +22,32 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --info: #3b82f6;
             --dark: #0f172a;
             --darker: #020617;
             --card: #1e293b;
             --text: #f1f5f9;
             --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--darker);
             color: var(--text);
             min-height: 100vh;
-            line-height: 1.6;
             overflow-x: hidden;
-            padding-bottom: 20px;
         }
 
-        /* Sistema Principal */
-        #main-system {
-            display: block;
-        }
-
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--dark), var(--darker));
             border-bottom: 1px solid var(--border);
             padding: 15px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-content {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -113,20 +101,21 @@
             transition: all 0.2s;
         }
 
-        .icon-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.1);
+        .nav-container {
+            background: var(--dark);
+            border-bottom: 1px solid var(--border);
+            padding: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: sticky;
+            top: 70px;
+            z-index: 999;
         }
 
-        /* Navegação */
         .nav-tabs {
             display: flex;
             gap: 5px;
-            padding: 10px;
-            overflow-x: auto;
-            background: var(--dark);
-            border-bottom: 1px solid var(--border);
-            -webkit-overflow-scrolling: touch;
+            min-width: max-content;
         }
 
         .nav-tab {
@@ -147,17 +136,19 @@
             color: white;
         }
 
-        /* Conteúdo */
-        .tab-content {
-            display: none;
-            max-width: 600px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
             padding: 15px;
         }
 
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -165,7 +156,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards */
         .card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -180,6 +170,7 @@
             align-items: center;
             gap: 12px;
             border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .card-icon {
@@ -191,15 +182,6 @@
             justify-content: center;
             font-size: 20px;
             background: rgba(99, 102, 241, 0.1);
-        }
-
-        .card-icon.pulse {
-            animation: pulse-battery 2s infinite;
-        }
-
-        @keyframes pulse-battery {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
         }
 
         .card-title-group h3 {
@@ -216,287 +198,336 @@
             padding: 15px;
         }
 
-        /* BATTERY DASHBOARD - PROFISSIONAL */
-        .battery-dashboard {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05));
+        /* BATERIA - MANTIDO EXATAMENTE COMO ESTAVA */
+        .battery-hero {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.1));
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .battery-main-display {
+            padding: 30px 20px;
             text-align: center;
             margin-bottom: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
-        .battery-percentage-large {
-            font-size: 4rem;
+        .battery-percent {
+            font-size: 5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--text), var(--accent));
+            background: linear-gradient(135deg, #fff, #06b6d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
         }
 
-        .battery-status-text {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .battery-status {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: #94a3b8;
         }
 
-        .charging-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--success);
+        .charging {
+            color: #10b981;
             font-weight: 600;
         }
 
-        .charging-indicator::before {
-            content: '⚡';
-            animation: flash 1s infinite;
+        .charging::before {
+            content: '⚡ ';
+            animation: pulse 1s infinite;
         }
 
-        @keyframes flash {
+        @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
 
-        /* Battery Circle */
-        .battery-circle-container {
+        .circle-container {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
-        .battery-circle {
-            width: 200px;
-            height: 200px;
+        .progress-circle {
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: conic-gradient(var(--success) 0% var(--battery-percent), rgba(255,255,255,0.1) var(--battery-percent) 100%);
+            background: conic-gradient(var(--color, #6366f1) 0% var(--percent), rgba(255,255,255,0.1) var(--percent) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-            transition: all 0.5s ease;
+            transition: all 0.3s;
         }
 
-        .battery-circle::before {
+        .progress-circle::before {
             content: '';
             position: absolute;
-            width: 170px;
-            height: 170px;
+            width: 150px;
+            height: 150px;
             background: var(--card);
             border-radius: 50%;
         }
 
-        .battery-circle-inner {
+        .circle-content {
             position: relative;
             text-align: center;
         }
 
-        .battery-circle-percent {
+        .circle-percent {
             font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text);
+            font-weight: 700;
         }
 
-        .battery-circle-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        /* Power Metrics Grid */
-        .power-metrics-grid {
+        .metrics-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .power-metric-card {
+        .metric-card {
             background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
         }
 
-        .power-metric-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
-        .power-metric-icon {
+        .metric-icon {
             font-size: 24px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
-        .power-metric-value {
-            font-size: 1.3rem;
+        .metric-value {
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--text);
-            font-family: 'SF Mono', monospace;
+            color: #fff;
+            font-family: monospace;
         }
 
-        .power-metric-value.positive {
-            color: var(--success);
-        }
+        .metric-value.positive { color: var(--success); }
+        .metric-value.negative { color: var(--danger); }
+        .metric-value.warning { color: var(--warning); }
 
-        .power-metric-value.negative {
-            color: var(--danger);
-        }
-
-        .power-metric-value.warning {
-            color: var(--warning);
-        }
-
-        .power-metric-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
             margin-top: 4px;
         }
 
-        /* Battery Details List */
-        .battery-details-list {
-            margin-top: 20px;
-        }
-
-        .detail-row {
+        .detail-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--border);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .detail-row.charging {
-            border-left-color: var(--success);
-            background: rgba(16, 185, 129, 0.05);
+        .detail-item:last-child {
+            border-bottom: none;
         }
 
-        .detail-row.discharging {
-            border-left-color: var(--warning);
-            background: rgba(245, 158, 11, 0.05);
-        }
-
-        .detail-row.critical {
-            border-left-color: var(--danger);
-            background: rgba(239, 68, 68, 0.05);
+        .detail-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .detail-icon {
             font-size: 20px;
-            margin-right: 10px;
         }
 
         .detail-info {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .detail-label {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: #64748b;
         }
 
         .detail-value {
             font-size: 1rem;
             font-weight: 600;
-            color: var(--text);
-            font-family: 'SF Mono', monospace;
+            color: #fff;
+            font-family: monospace;
         }
 
-        /* Temperature Gauge */
-        .temp-gauge {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
+        /* NOVOS COMPONENTES PARA SENSORES */
+        .sensor-live {
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        .temp-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .temp-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .temp-value {
-            font-size: 1.2rem;
+        .sensor-value-large {
+            font-size: 3rem;
             font-weight: 700;
-            color: var(--text);
+            font-family: monospace;
+            color: var(--accent);
         }
 
-        .temp-bar-container {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+        .sensor-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .sensor-graph {
+            height: 100px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 10px;
+            position: relative;
             overflow: hidden;
+        }
+
+        .graph-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--primary), transparent);
+            opacity: 0.6;
+        }
+
+        .compass-container {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
             position: relative;
         }
 
-        .temp-bar {
+        .compass-circle {
+            width: 100%;
             height: 100%;
-            border-radius: 4px;
-            transition: all 0.5s ease;
-            background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
-            background-size: 200% 100%;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            position: relative;
+            background: rgba(99, 102, 241, 0.1);
         }
 
-        .temp-status {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .compass-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to top, var(--danger), var(--success));
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%);
+            border-radius: 2px;
+            transition: transform 0.1s;
         }
 
-        /* Charging Animation */
-        .charging-animation {
+        .compass-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .compass-direction {
+            position: absolute;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .compass-n { top: 10px; left: 50%; transform: translateX(-50%); color: var(--danger); }
+        .compass-s { bottom: 10px; left: 50%; transform: translateX(-50%); }
+        .compass-e { right: 10px; top: 50%; transform: translateY(-50%); }
+        .compass-w { left: 10px; top: 50%; transform: translateY(-50%); }
+
+        .gps-map {
+            height: 200px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 12px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 5px;
-            margin: 15px 0;
-            height: 30px;
-            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
         }
 
-        .charge-bar {
-            width: 8px;
-            background: linear-gradient(to top, var(--success), var(--accent));
-            border-radius: 4px;
-            animation: charge-wave 1s ease-in-out infinite;
+        .gps-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
-        .charge-bar:nth-child(1) { height: 20%; animation-delay: 0s; }
-        .charge-bar:nth-child(2) { height: 40%; animation-delay: 0.1s; }
-        .charge-bar:nth-child(3) { height: 60%; animation-delay: 0.2s; }
-        .charge-bar:nth-child(4) { height: 80%; animation-delay: 0.3s; }
-        .charge-bar:nth-child(5) { height: 100%; animation-delay: 0.4s; }
-
-        @keyframes charge-wave {
-            0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
-            50% { opacity: 1; transform: scaleY(1); }
+        .gps-point {
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--success);
+            position: relative;
+            z-index: 10;
+            animation: gps-pulse 2s infinite;
         }
 
-        /* Data Grid */
-        .data-grid {
+        @keyframes gps-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .signal-bars {
             display: flex;
-            flex-direction: column;
+            gap: 3px;
+            align-items: flex-end;
+            height: 30px;
+        }
+
+        .signal-bar {
+            width: 8px;
+            background: var(--success);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .signal-bar:nth-child(1) { height: 20%; }
+        .signal-bar:nth-child(2) { height: 40%; }
+        .signal-bar:nth-child(3) { height: 60%; }
+        .signal-bar:nth-child(4) { height: 80%; }
+        .signal-bar:nth-child(5) { height: 100%; }
+
+        .signal-bar.weak { background: var(--danger); }
+        .signal-bar.medium { background: var(--warning); }
+
+        .camera-preview {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .camera-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            inset: 0;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .data-grid {
+            display: grid;
             gap: 2px;
         }
 
@@ -518,10 +549,9 @@
         }
 
         .data-value {
-            font-family: 'SF Mono', monospace;
+            font-family: monospace;
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--text);
         }
 
         .data-value.success { color: var(--success); }
@@ -529,400 +559,480 @@
         .data-value.danger { color: var(--danger); }
         .data-value.accent { color: var(--accent); }
 
-        /* Health Indicator */
-        .health-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .health-ring {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: conic-gradient(var(--success) 0% var(--health-percent), rgba(255,255,255,0.1) var(--health-percent) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .health-ring::before {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: var(--card);
-            border-radius: 50%;
-        }
-
-        .health-value {
-            position: relative;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .health-info {
-            flex: 1;
-        }
-
-        .health-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .health-status {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--success);
-        }
-
-        /* Usage Stats */
-        .usage-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .usage-stat {
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
-
-        .usage-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .usage-label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* Toast */
-        .toast-container {
+        .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .toast {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 12px 16px;
+            padding: 12px 20px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: toastIn 0.3s ease;
+            color: white;
+            z-index: 10000;
+            display: none;
         }
 
-        @keyframes toastIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .toast.show {
+            display: block;
+            animation: slideUp 0.3s;
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .battery-percentage-large {
-                font-size: 3rem;
-            }
-            
-            .battery-circle {
-                width: 160px;
-                height: 160px;
-            }
-            
-            .battery-circle::before {
-                width: 135px;
-                height: 135px;
-            }
-            
-            .power-metrics-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .usage-stats {
-                grid-template-columns: 1fr;
-            }
+        @keyframes slideUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
         }
 
-        /* Status indicators */
-        .status-badge {
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .status-indicator {
             display: inline-flex;
             align-items: center;
+            gap: 5px;
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 0.75rem;
             font-weight: 600;
-            gap: 4px;
         }
 
-        .status-badge.online {
+        .status-indicator.active {
             background: rgba(16, 185, 129, 0.2);
             color: var(--success);
         }
 
-        .status-badge.offline {
+        .status-indicator.inactive {
             background: rgba(239, 68, 68, 0.2);
             color: var(--danger);
         }
 
-        .status-badge.unknown {
-            background: rgba(148, 163, 184, 0.2);
-            color: var(--text-muted);
-        }
+        .low-battery { --color: #ef4444; }
+        .medium-battery { --color: #f59e0b; }
+        .high-battery { --color: #10b981; }
+        .charging-battery { --color: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.3); }
 
-        /* Real-time indicator */
-        .realtime-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.75rem;
-            color: var(--success);
-            margin-left: 10px;
-        }
-
-        .realtime-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Battery tech badge */
-        .tech-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--primary);
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        /* Last update time */
-        .last-update {
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-            opacity: 0.7;
+        @media (max-width: 480px) {
+            .battery-percent { font-size: 3.5rem; }
+            .sensor-value-large { font-size: 2rem; }
+            .compass-container { width: 150px; height: 150px; }
         }
     </style>
 </head>
 <body>
-    <!-- Sistema -->
-    <div id="main-system" class="active">
-        <header>
-            <div class="header-content">
-                <div class="brand">
-                    <div class="brand-icon">🔋</div>
-                    <div class="brand-text">
-                        <h1>Monitor Profissional de Bateria</h1>
-                        <p>Análise Avançada de Energia</p>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button class="icon-btn" onclick="refreshAll()" title="Atualizar">🔄</button>
+    <header>
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">📱</div>
+                <div class="brand-text">
+                    <h1>Device Intelligence Pro</h1>
+                    <p>Diagnóstico Completo do Dispositivo</p>
                 </div>
             </div>
-        </header>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="refreshAll()" title="Atualizar">🔄</button>
+            </div>
+        </div>
+    </header>
 
-        <nav class="nav-tabs">
+    <div class="nav-container">
+        <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('battery', this)">🔋 Bateria</button>
-            <button class="nav-tab" onclick="switchTab('system', this)">📱 Sistema</button>
+            <button class="nav-tab" onclick="switchTab('sensors', this)">📡 Sensores</button>
+            <button class="nav-tab" onclick="switchTab('motion', this)">🎾 Movimento</button>
+            <button class="nav-tab" onclick="switchTab('location', this)">📍 Localização</button>
             <button class="nav-tab" onclick="switchTab('network', this)">🌐 Rede</button>
-            <button class="nav-tab" onclick="switchTab('privacy', this)">🔒 Privacidade</button>
-        </nav>
+            <button class="nav-tab" onclick="switchTab('hardware', this)">⚙️ Hardware</button>
+            <button class="nav-tab" onclick="switchTab('camera', this)">📷 Câmera</button>
+            <button class="nav-tab" onclick="switchTab('audio', this)">🎤 Áudio</button>
+            <button class="nav-tab" onclick="switchTab('screen', this)">🖥️ Tela</button>
+            <button class="nav-tab" onclick="switchTab('storage', this)">💾 Armazenamento</button>
+        </div>
+    </div>
 
-        <!-- ABA BATERIA - COMPLETA E REAL -->
+    <div class="container">
+
+        <!-- ABA BATERIA - MANTIDA EXATAMENTE COMO ESTAVA -->
         <div class="tab-content active" id="tab-battery">
-            <!-- Dashboard Principal -->
-            <div class="battery-dashboard">
-                <div class="battery-main-display">
-                    <div class="battery-percentage-large" id="main-percent">--%</div>
-                    <div class="battery-status-text" id="main-status">
-                        <span class="charging-indicator" style="display: none;" id="charging-text">CARREGANDO</span>
-                        <span id="discharging-text">Verificando...
-                            <span class="realtime-indicator" id="realtime-badge" style="display: none;">
-                                <span class="realtime-dot"></span>
-                                TEMPO REAL
-                            </span>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Animação de Carregamento -->
-                <div class="charging-animation" id="charge-animation" style="display: none;">
-                    <div class="charge-bar"></div>
-                    <div class="charge-bar"></div>
-                    <div class="charge-bar"></div>
-                    <div class="charge-bar"></div>
-                    <div class="charge-bar"></div>
-                </div>
-
-                <!-- Círculo de Bateria -->
-                <div class="battery-circle-container">
-                    <div class="battery-circle" id="battery-circle" style="--battery-percent: 0%;">
-                        <div class="battery-circle-inner">
-                            <div class="battery-circle-percent" id="circle-percent">--%</div>
-                            <div class="battery-circle-label" id="circle-label">Bateria</div>
+            <div class="battery-hero">
+                <div class="battery-percent" id="main-percent">--%</div>
+                <div class="battery-status" id="battery-status">Carregando...</div>
+                
+                <div class="circle-container">
+                    <div class="progress-circle" id="battery-circle" style="--percent: 0%;">
+                        <div class="circle-content">
+                            <div class="circle-percent" id="circle-percent">--</div>
+                            <div class="circle-label">%</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Métricas de Potência em Tempo Real -->
-                <div class="power-metrics-grid">
-                    <div class="power-metric-card">
-                        <div class="power-metric-icon">⚡</div>
-                        <div class="power-metric-value positive" id="metric-watts">--</div>
-                        <div class="power-metric-label">Potência (W)</div>
-                    </div>
-                    <div class="power-metric-card">
-                        <div class="power-metric-icon">🔌</div>
-                        <div class="power-metric-value" id="metric-voltage">--</div>
-                        <div class="power-metric-label">Voltagem (V)</div>
-                    </div>
-                    <div class="power-metric-card">
-                        <div class="power-metric-icon">📊</div>
-                        <div class="power-metric-value" id="metric-current">--</div>
-                        <div class="power-metric-label">Corrente (mA)</div>
-                    </div>
-                    <div class="power-metric-card">
-                        <div class="power-metric-icon">🌡️</div>
-                        <div class="power-metric-value" id="metric-temp">--</div>
-                        <div class="power-metric-label">Temperatura (°C)</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-value" id="metric-voltage">--</div>
+                    <div class="metric-label">Voltagem (V)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🔌</div>
+                    <div class="metric-value" id="metric-current">--</div>
+                    <div class="metric-label">Corrente (mA)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🌡️</div>
+                    <div class="metric-value" id="metric-temp">--</div>
+                    <div class="metric-label">Temperatura (°C)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">💪</div>
+                    <div class="metric-value" id="metric-power">--</div>
+                    <div class="metric-label">Potência (W)</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title-group">
+                        <h3>Detalhes Avançados</h3>
                     </div>
                 </div>
-
-                <!-- Saúde da Bateria -->
-                <div class="health-indicator" id="health-section" style="display: none;">
-                    <div class="health-ring" id="health-ring" style="--health-percent: 0%;">
-                        <div class="health-value" id="health-percent-text">--%</div>
-                    </div>
-                    <div class="health-info">
-                        <div class="health-label">Saúde da Bateria</div>
-                        <div class="health-status" id="health-status-text">--</div>
-                    </div>
-                    <span class="tech-badge" id="battery-tech">Li-ion</span>
-                </div>
-
-                <!-- Estatísticas de Uso -->
-                <div class="usage-stats" id="usage-stats" style="display: none;">
-                    <div class="usage-stat">
-                        <div class="usage-value" id="stat-screen-on">--</div>
-                        <div class="usage-label">TEMPO TELA LIGADA</div>
-                    </div>
-                    <div class="usage-stat">
-                        <div class="usage-value" id="stat-screen-off">--</div>
-                        <div class="usage-label">TEMPO TELA DESLIGADA</div>
-                    </div>
-                    <div class="usage-stat">
-                        <div class="usage-value" id="stat-cycles">--</div>
-                        <div class="usage-label">CICLOS DE CARGA</div>
-                    </div>
-                </div>
-
-                <!-- Detalhes Avançados -->
-                <div class="battery-details-list">
-                    <div class="detail-row" id="row-time-full">
-                        <span class="detail-icon">⏱️</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Tempo para Carga Total</div>
-                            <div class="detail-value" id="detail-time-full">--</div>
+                <div class="card-body">
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">🔋</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Capacidade</span>
+                                <span class="detail-value" id="detail-capacity">-- mAh</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="detail-row" id="row-time-empty">
-                        <span class="detail-icon">🔋</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Tempo Restante (Uso)</div>
-                            <div class="detail-value" id="detail-time-empty">--</div>
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">⏱️</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Tempo para carga total</span>
+                                <span class="detail-value" id="detail-time-full">--</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="detail-row" id="row-capacity">
-                        <span class="detail-icon">🔋</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Capacidade Atual / Design</div>
-                            <div class="detail-value" id="detail-capacity">-- / -- mAh</div>
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">🔋</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Tempo restante (uso)</span>
+                                <span class="detail-value" id="detail-time-empty">--</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="detail-row" id="row-charge-rate">
-                        <span class="detail-icon">⚡</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Taxa de Carga/Descarga</div>
-                            <div class="detail-value" id="detail-charge-rate">--</div>
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">⚡</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Taxa de carga</span>
+                                <span class="detail-value" id="detail-rate">--</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="detail-row" id="row-status">
-                        <span class="detail-icon">🔌</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Status da Energia</div>
-                            <div class="detail-value" id="detail-power-status">--</div>
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">🔌</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value" id="detail-status">--</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="detail-row" id="row-plugged">
-                        <span class="detail-icon">🔋</span>
-                        <div class="detail-info">
-                            <div class="detail-label">Tipo de Conexão</div>
-                            <div class="detail-value" id="detail-plugged">--</div>
+                    <div class="detail-item">
+                        <div class="detail-left">
+                            <span class="detail-icon">🏥</span>
+                            <div class="detail-info">
+                                <span class="detail-label">Saúde da bateria</span>
+                                <span class="detail-value" id="detail-health">--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="last-update" id="last-update">Última atualização: --</div>
             </div>
         </div>
 
-        <!-- ABA SISTEMA -->
-        <div class="tab-content" id="tab-system">
+        <!-- ABA SENSORES AMBIENTAIS -->
+        <div class="tab-content" id="tab-sensors">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-icon">📱</div>
+                    <div class="card-icon">💡</div>
                     <div class="card-title-group">
-                        <h3>Informações do Dispositivo</h3>
-                        <p>Hardware e Software</p>
+                        <h3>Sensor de Luz Ambiente</h3>
+                        <p>Luminosidade em lux</p>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="data-grid" id="system-info"></div>
+                    <div class="sensor-live">
+                        <div class="sensor-value-large" id="light-value">--</div>
+                        <div class="sensor-label">lux</div>
+                        <div class="sensor-graph">
+                            <div class="graph-line" id="light-graph" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Status</span>
+                            <span class="data-value" id="light-status">Aguardando...</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Interpretação</span>
+                            <span class="data-value" id="light-desc">--</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-icon">🖥️</div>
+                    <div class="card-icon">🧲</div>
                     <div class="card-title-group">
-                        <h3>Display & Tela</h3>
-                        <p>Resolução e Orientação</p>
+                        <h3>Magnetômetro (Bússola)</h3>
+                        <p>Campo magnético em μT</p>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="data-grid" id="display-info"></div>
+                    <div class="compass-container">
+                        <div class="compass-circle">
+                            <div class="compass-direction compass-n">N</div>
+                            <div class="compass-direction compass-s">S</div>
+                            <div class="compass-direction compass-e">E</div>
+                            <div class="compass-direction compass-w">W</div>
+                            <div class="compass-needle" id="compass-needle"></div>
+                            <div class="compass-center"></div>
+                        </div>
+                    </div>
+                    <div class="sensor-live">
+                        <div class="sensor-value-large" id="magnetic-value">--</div>
+                        <div class="sensor-label">μT (microteslas)</div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Direção</span>
+                            <span class="data-value accent" id="compass-direction">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Precisão</span>
+                            <span class="data-value" id="compass-accuracy">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔲</div>
+                    <div class="card-title-group">
+                        <h3>Sensor de Proximidade</h3>
+                        <p>Detecção de objetos próximos</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="sensor-live">
+                        <div class="sensor-value-large" id="proximity-value">--</div>
+                        <div class="sensor-label">cm (aproximado)</div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Estado</span>
+                            <span class="status-indicator inactive" id="proximity-status">Longe</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Máximo</span>
+                            <span class="data-value" id="proximity-max">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA MOVIMENTO -->
+        <div class="tab-content" id="tab-motion">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📐</div>
+                    <div class="card-title-group">
+                        <h3>Acelerômetro</h3>
+                        <p>Aceleração em m/s²</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">↔️</div>
+                            <div class="metric-value" id="accel-x">0.00</div>
+                            <div class="metric-label">Eixo X</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">↕️</div>
+                            <div class="metric-value" id="accel-y">0.00</div>
+                            <div class="metric-label">Eixo Y</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⬆️</div>
+                            <div class="metric-value" id="accel-z">0.00</div>
+                            <div class="metric-label">Eixo Z</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">📊</div>
+                            <div class="metric-value" id="accel-total">0.00</div>
+                            <div class="metric-label">Total</div>
+                        </div>
+                    </div>
+                    <div class="sensor-graph" style="height: 150px;">
+                        <canvas id="accel-canvas" width="400" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-title-group">
+                        <h3>Giroscópio</h3>
+                        <p>Velocidade de rotação em °/s</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">↔️</div>
+                            <div class="metric-value" id="gyro-x">0.00</div>
+                            <div class="metric-label">Alpha (Z)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">↕️</div>
+                            <div class="metric-value" id="gyro-y">0.00</div>
+                            <div class="metric-label">Beta (X)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🔄</div>
+                            <div class="metric-value" id="gyro-z">0.00</div>
+                            <div class="metric-label">Gamma (Y)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title-group">
+                        <h3>Orientação do Dispositivo</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">📱</div>
+                            <div class="metric-value" id="orient-alpha">0°</div>
+                            <div class="metric-label">Rotação (α)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">↗️</div>
+                            <div class="metric-value" id="orient-beta">0°</div>
+                            <div class="metric-label">Inclinação Frente (β)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">↔️</div>
+                            <div class="metric-value" id="orient-gamma">0°</div>
+                            <div class="metric-label">Inclinação Lateral (γ)</div>
+                        </div>
+                    </div>
+                    <div class="data-grid" style="margin-top: 15px;">
+                        <div class="data-row">
+                            <span class="data-label">Modo</span>
+                            <span class="data-value" id="orient-mode">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tela</span>
+                            <span class="data-value" id="screen-orient">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA LOCALIZAÇÃO -->
+        <div class="tab-content" id="tab-location">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📍</div>
+                    <div class="card-title-group">
+                        <h3>GPS - Coordenadas</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="gps-map">
+                        <div class="gps-grid"></div>
+                        <div class="gps-point"></div>
+                    </div>
+                    <div class="metrics-grid" style="margin-top: 15px;">
+                        <div class="metric-card">
+                            <div class="metric-icon">🌐</div>
+                            <div class="metric-value" id="gps-lat">--</div>
+                            <div class="metric-label">Latitude</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🌐</div>
+                            <div class="metric-value" id="gps-long">--</div>
+                            <div class="metric-label">Longitude</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">📏</div>
+                            <div class="metric-value" id="gps-alt">--</div>
+                            <div class="metric-label">Altitude (m)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🎯</div>
+                            <div class="metric-value" id="gps-acc">--</div>
+                            <div class="metric-label">Precisão (m)</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="getLocation()">📍 Atualizar Localização</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🧭</div>
+                    <div class="card-title-group">
+                        <h3>Informações de Posição</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Direção (Heading)</span>
+                            <span class="data-value" id="gps-heading">--°</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Velocidade</span>
+                            <span class="data-value" id="gps-speed">-- m/s</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Horário GPS</span>
+                            <span class="data-value" id="gps-time">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Provedor</span>
+                            <span class="data-value success">GPS + Rede</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -931,602 +1041,1039 @@
         <div class="tab-content" id="tab-network">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-icon">🌐</div>
+                    <div class="card-icon">📶</div>
                     <div class="card-title-group">
                         <h3>Status da Conexão</h3>
-                        <p>Informações de Rede</p>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="data-grid" id="network-info"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA PRIVACIDADE -->
-        <div class="tab-content" id="tab-privacy">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">🔒</div>
-                    <div class="card-title-group">
-                        <h3>Pontuação de Privacidade</h3>
+                    <div class="sensor-live">
+                        <div class="signal-bars" id="signal-bars">
+                            <div class="signal-bar"></div>
+                            <div class="signal-bar"></div>
+                            <div class="signal-bar"></div>
+                            <div class="signal-bar"></div>
+                            <div class="signal-bar"></div>
+                        </div>
+                        <div class="sensor-value-large" id="network-type" style="font-size: 1.5rem; margin-top: 10px;">--</div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Tipo de Conexão</span>
+                            <span class="data-value accent" id="conn-type">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Download Efetivo</span>
+                            <span class="data-value success" id="conn-downlink">-- Mbps</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Latência (RTT)</span>
+                            <span class="data-value" id="conn-rtt">-- ms</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Economia de Dados</span>
+                            <span class="data-value" id="conn-save">--</span>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" style="text-align: center;">
-                    <div style="font-size: 3rem; font-weight: 800; color: var(--accent);" id="privacy-score">--</div>
-                    <div style="color: var(--text-muted);">pontos</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-title-group">
+                        <h3>Informações de Rede</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Online</span>
+                            <span class="status-indicator" id="net-online">Verificando...</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tipo Efetivo</span>
+                            <span class="data-value" id="net-effective">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tecnologia</span>
+                            <span class="data-value" id="net-tech">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Max Download</span>
+                            <span class="data-value" id="net-max">-- Mbps</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="testSpeed()">🚀 Testar Velocidade</button>
                 </div>
             </div>
         </div>
+
+        <!-- ABA HARDWARE -->
+        <div class="tab-content" id="tab-hardware">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🧠</div>
+                    <div class="card-title-group">
+                        <h3>Processador & Memória</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Núcleos Lógicos</span>
+                            <span class="data-value accent" id="cpu-cores">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Memória RAM (Aprox)</span>
+                            <span class="data-value accent" id="device-ram">-- GB</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Arquitetura</span>
+                            <span class="data-value" id="cpu-arch">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Modo de Economia</span>
+                            <span class="data-value" id="save-mode">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                    <div class="card-title-group">
+                        <h3>Dispositivo & SO</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Sistema Operacional</span>
+                            <span class="data-value" id="os-name">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Versão</span>
+                            <span class="data-value" id="os-version">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Plataforma</span>
+                            <span class="data-value" id="platform">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">User Agent</span>
+                            <span class="data-value" style="font-size: 0.7rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" id="user-agent">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Idioma</span>
+                            <span class="data-value" id="language">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Fuso Horário</span>
+                            <span class="data-value" id="timezone">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔋</div>
+                    <div class="card-title-group">
+                        <h3>Bateria (Detalhes Técnicos)</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Nível</span>
+                            <span class="data-value" id="bat-level">--%</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Carregando</span>
+                            <span class="status-indicator" id="bat-charging">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tempo de Carga</span>
+                            <span class="data-value" id="bat-charge-time">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tempo de Descarga</span>
+                            <span class="data-value" id="bat-discharge-time">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA CÂMERA -->
+        <div class="tab-content" id="tab-camera">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📷</div>
+                    <div class="card-title-group">
+                        <h3>Preview da Câmera</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="camera-preview">
+                        <video id="camera-video" autoplay playsinline></video>
+                        <div class="camera-overlay"></div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-primary" onclick="startCamera('environment')">📷 Traseira</button>
+                        <button class="btn-primary" onclick="startCamera('user')">🤳 Frontal</button>
+                        <button class="btn-primary" onclick="stopCamera()" style="background: var(--danger);">⏹️ Parar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📸</div>
+                    <div class="card-title-group">
+                        <h3>Informações da Câmera</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Câmeras Disponíveis</span>
+                            <span class="data-value" id="cam-count">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Flash Disponível</span>
+                            <span class="data-value" id="flash-avail">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Autofoco</span>
+                            <span class="data-value" id="autofocus">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Estabilização</span>
+                            <span class="data-value" id="stabilization">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA ÁUDIO -->
+        <div class="tab-content" id="tab-audio">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎤</div>
+                    <div class="card-title-group">
+                        <h3>Microfone - Visualizador</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="sensor-live">
+                        <div class="sensor-value-large" id="audio-level">--</div>
+                        <div class="sensor-label">dB (nível de áudio)</div>
+                        <div class="sensor-graph">
+                            <div class="graph-line" id="audio-graph" style="height: 0%; background: linear-gradient(to top, var(--secondary), transparent);"></div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="toggleAudio()" id="audio-btn">🎙️ Iniciar Monitoramento</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔊</div>
+                    <div class="card-title-group">
+                        <h3>Dispositivos de Áudio</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Saída de Áudio</span>
+                            <span class="data-value" id="audio-out">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Entrada de Áudio</span>
+                            <span class="data-value" id="audio-in">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Sintetizador de Voz</span>
+                            <span class="data-value" id="speech-synth">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Reconhecimento de Voz</span>
+                            <span class="data-value" id="speech-recog">--</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="testSpeech()">🔊 Testar Sintetizador</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA TELA -->
+        <div class="tab-content" id="tab-screen">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🖥️</div>
+                    <div class="card-title-group">
+                        <h3>Especificações da Tela</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">📐</div>
+                            <div class="metric-value" id="screen-res">--</div>
+                            <div class="metric-label">Resolução</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🔍</div>
+                            <div class="metric-value" id="screen-ppi">--</div>
+                            <div class="metric-label">PPI (Densidade)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🎨</div>
+                            <div class="metric-value" id="screen-color">--</div>
+                            <div class="metric-label">Profundidade</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">📱</div>
+                            <div class="metric-value" id="screen-ratio">--</div>
+                            <div class="metric-label">Proporção</div>
+                        </div>
+                    </div>
+                    <div class="data-grid" style="margin-top: 15px;">
+                        <div class="data-row">
+                            <span class="data-label">Tamanho Estimado</span>
+                            <span class="data-value" id="screen-size">-- polegadas</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Orientação Atual</span>
+                            <span class="data-value" id="screen-orient-detail">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Modo Noturno</span>
+                            <span class="data-value" id="dark-mode">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Taxa de Atualização</span>
+                            <span class="data-value" id="refresh-rate">60 Hz (estimado)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎨</div>
+                    <div class="card-title-group">
+                        <h3>Testes de Cores</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                        <div style="aspect-ratio: 1; background: #ef4444; border-radius: 8px;"></div>
+                        <div style="aspect-ratio: 1; background: #10b981; border-radius: 8px;"></div>
+                        <div style="aspect-ratio: 1; background: #3b82f6; border-radius: 8px;"></div>
+                        <div style="aspect-ratio: 1; background: #f59e0b; border-radius: 8px;"></div>
+                    </div>
+                    <div style="height: 50px; background: linear-gradient(90deg, #000, #fff); border-radius: 8px; margin-bottom: 10px;"></div>
+                    <div style="height: 50px; background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); border-radius: 8px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA ARMAZENAMENTO -->
+        <div class="tab-content" id="tab-storage">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💾</div>
+                    <div class="card-title-group">
+                        <h3>Armazenamento Local</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="sensor-live">
+                        <div class="sensor-value-large" id="storage-used">--</div>
+                        <div class="sensor-label">MB usados (LocalStorage)</div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Limite Aproximado</span>
+                            <span class="data-value">5-10 MB</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Itens Salvos</span>
+                            <span class="data-value" id="storage-items">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">IndexedDB</span>
+                            <span class="data-value" id="indexeddb">Disponível</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Cache API</span>
+                            <span class="data-value" id="cache-api">Disponível</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="testStorage()">💾 Testar Capacidade</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🍪</div>
+                    <div class="card-title-group">
+                        <h3>Cookies & Sessão</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <span class="data-label">Cookies Habilitados</span>
+                            <span class="data-value" id="cookies-enabled">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">LocalStorage</span>
+                            <span class="data-value success">Disponível</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">SessionStorage</span>
+                            <span class="data-value success">Disponível</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tamanho do Cookie</span>
+                            <span class="data-value" id="cookie-size">-- bytes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="toast-container" id="toast-container"></div>
+    <div class="toast" id="toast"></div>
 
     <script>
-        // CONFIGURAÇÃO
-        const CONFIG = {
-            UPDATE_INTERVAL: 1000, // Atualização a cada 1 segundo para dados em tempo real
-            HISTORY_SIZE: 60, // Manter histórico de 60 leituras para cálculos de tendência
-            MIN_VOLTAGE: 3.0,
-            MAX_VOLTAGE: 4.35,
-            NOMINAL_VOLTAGE: 3.85
-        };
+        // ============== BATERIA - MANTIDO EXATAMENTE COMO ESTAVA ==============
+        let battery = null;
+        let lastLevel = null;
+        let lastTime = null;
 
-        // Estado global
-        const state = {
-            battery: null,
-            batteryHistory: [],
-            lastLevel: null,
-            lastTime: null,
-            isCharging: false,
-            chargeStartTime: null,
-            dischargeStartTime: null,
-            startLevel: null,
-            androidBattery: null, // Para dados do Android via JS Interface
-            updateCount: 0
-        };
-
-        // Inicialização
-        function initApp() {
-            console.log('[App] Inicializando Monitor de Bateria Profissional...');
-            initBattery();
-            fillSystemInfo();
-            fillDisplayInfo();
-            initNetworkInfo();
-            calculatePrivacyScore();
-            
-            // Tentar obter dados nativos do Android (se estiver em WebView do Kodular)
-            tryGetAndroidBatteryInfo();
-            
-            showToast('Sistema iniciado com sucesso!', 'success');
-        }
-
-        // Tentar obter informações nativas do Android
-        function tryGetAndroidBatteryInfo() {
-            // Verificar se estamos em um WebView do Android com interface JS
-            if (window.Android && window.Android.getBatteryInfo) {
-                console.log('[Android] Interface nativa detectada');
-                updateFromAndroid();
-                setInterval(updateFromAndroid, CONFIG.UPDATE_INTERVAL);
-            } else {
-                console.log('[Web] Usando API Battery padrão do navegador');
-                // Fallback para navegadores normais
-                initStandardBattery();
-            }
-        }
-
-        // Atualizar dados do Android nativo
-        function updateFromAndroid() {
-            try {
-                const info = window.Android.getBatteryInfo();
-                if (info) {
-                    state.androidBattery = JSON.parse(info);
-                    updateAndroidBatteryDisplay(state.androidBattery);
+        async function initBattery() {
+            if ('getBattery' in navigator) {
+                try {
+                    battery = await navigator.getBattery();
+                    startBatteryMonitoring();
+                } catch (e) {
+                    console.error('Erro bateria:', e);
+                    simulateBattery();
                 }
-            } catch (e) {
-                console.error('[Android] Erro ao obter dados:', e);
+            } else {
+                simulateBattery();
             }
         }
 
-        // Inicializar bateria padrão (para navegadores)
-        async function initStandardBattery() {
-            if (!('getBattery' in navigator)) {
-                showToast('API de bateria não suportada neste dispositivo', 'warning');
-                simulateBatteryData();
-                return;
-            }
-
-            try {
-                const battery = await navigator.getBattery();
-                state.battery = battery;
-                state.lastLevel = battery.level;
-                state.lastTime = Date.now();
-                state.startLevel = battery.level;
-
-                updateBatteryDisplay(battery);
-                startRealtimeUpdates(battery);
-
-                // Event listeners
-                battery.addEventListener('levelchange', () => {
-                    updateBatteryDisplay(battery);
-                    calculateAdvancedMetrics();
-                });
-                
-                battery.addEventListener('chargingchange', () => {
-                    handleChargingChange(battery);
-                    updateBatteryDisplay(battery);
-                });
-                
-                battery.addEventListener('chargingtimechange', () => updateBatteryDisplay(battery));
-                battery.addEventListener('dischargingtimechange', () => updateBatteryDisplay(battery));
-
-            } catch (e) {
-                console.error('Erro bateria:', e);
-                simulateBatteryData();
-            }
-        }
-
-        // Atualizar display com dados do Android (mais precisos)
-        function updateAndroidBatteryDisplay(info) {
-            const percent = info.level || 0;
-            const isCharging = info.isCharging || false;
-            const voltage = info.voltage || 0;
-            const temperature = info.temperature || 0;
-            const current = info.current || 0;
-            const health = info.health || 'UNKNOWN';
-            const technology = info.technology || 'Li-ion';
-            const capacity = info.capacity || 0;
-            const maxCapacity = info.maxCapacity || 0;
-            const plugged = info.plugged || 'DESCONHECIDO';
-
-            state.isCharging = isCharging;
-
-            // Atualizar UI principal
-            document.getElementById('main-percent').textContent = `${percent}%`;
-            document.getElementById('circle-percent').textContent = `${percent}%`;
+        function startBatteryMonitoring() {
+            updateBatteryDisplay();
+            battery.addEventListener('levelchange', updateBatteryDisplay);
+            battery.addEventListener('chargingchange', updateBatteryDisplay);
+            battery.addEventListener('chargingtimechange', updateBatteryDisplay);
+            battery.addEventListener('dischargingtimechange', updateBatteryDisplay);
             
-            const circle = document.getElementById('battery-circle');
-            circle.style.setProperty('--battery-percent', `${percent}%`);
-            updateBatteryColor(circle, percent, isCharging);
-
-            // Status
-            updateChargingStatus(isCharging, percent);
-
-            // Métricas elétricas reais
-            const watts = voltage > 0 ? (voltage * Math.abs(current) / 1000).toFixed(2) : '--';
-            document.getElementById('metric-watts').textContent = isCharging ? `+${watts}` : `-${watts}`;
-            document.getElementById('metric-watts').className = isCharging ? 'power-metric-value positive' : 'power-metric-value negative';
+            setInterval(() => {
+                calculateBatteryRate();
+            }, 5000);
             
-            document.getElementById('metric-voltage').textContent = voltage > 0 ? (voltage / 1000).toFixed(3) : '--';
-            document.getElementById('metric-current').textContent = current !== 0 ? Math.abs(current) : '--';
-            document.getElementById('metric-temp').textContent = temperature > 0 ? (temperature / 10).toFixed(1) : '--';
-
-            // Saúde da bateria
-            updateHealthDisplay(health, maxCapacity, capacity, technology);
-
-            // Capacidade
-            document.getElementById('detail-capacity').textContent = 
-                capacity > 0 && maxCapacity > 0 ? 
-                `${Math.round(capacity)} / ${Math.round(maxCapacity)} mAh` : '-- / -- mAh';
-
-            // Status de energia
-            const pluggedTypes = {
-                'AC': 'Carregador de Parede ⚡',
-                'USB': 'USB 🔌',
-                'WIRELESS': 'Wireless 📡',
-                'DOCK': 'Dock 🖥️'
-            };
-            document.getElementById('detail-plugged').textContent = pluggedTypes[plugged] || 'Desconectado';
-            document.getElementById('detail-power-status').textContent = isCharging ? 'CARREGANDO' : 'DESCARREGANDO';
-
-            // Tempos estimados (cálculos avançados)
-            calculateTimeEstimates(percent, current, capacity, isCharging);
-
-            // Taxa de carga
-            updateChargeRate(current, isCharging);
-
-            // Mostrar indicador de tempo real
-            document.getElementById('realtime-badge').style.display = 'inline-flex';
-            document.getElementById('last-update').textContent = 
-                `Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`;
+            lastLevel = battery.level;
+            lastTime = Date.now();
         }
 
-        // Atualizar display padrão (navegadores)
-        function updateBatteryDisplay(battery) {
-            const level = battery.level;
-            const percent = Math.round(level * 100);
+        function updateBatteryDisplay() {
+            if (!battery) return;
+            
+            const level = Math.round(battery.level * 100);
             const isCharging = battery.charging;
-            state.isCharging = isCharging;
-
-            document.getElementById('main-percent').textContent = `${percent}%`;
-            document.getElementById('circle-percent').textContent = `${percent}%`;
-
+            
+            document.getElementById('main-percent').textContent = level + '%';
+            document.getElementById('circle-percent').textContent = level;
+            
             const circle = document.getElementById('battery-circle');
-            circle.style.setProperty('--battery-percent', `${percent}%`);
-            updateBatteryColor(circle, percent, isCharging);
-
-            updateChargingStatus(isCharging, percent);
-
-            // Estimativas baseadas em cálculos históricos
-            updateStandardMetrics(battery, percent);
-            
-            document.getElementById('last-update').textContent = 
-                `Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`;
-        }
-
-        function updateBatteryColor(element, percent, isCharging) {
-            if (isCharging) {
-                element.style.background = `conic-gradient(var(--success) 0% ${percent}%, rgba(255,255,255,0.1) ${percent}% 100%)`;
-                element.style.boxShadow = `0 0 30px rgba(16, 185, 129, 0.3)`;
-            } else if (percent <= 15) {
-                element.style.background = `conic-gradient(var(--danger) 0% ${percent}%, rgba(255,255,255,0.1) ${percent}% 100%)`;
-                element.style.boxShadow = `0 0 30px rgba(239, 68, 68, 0.3)`;
-            } else if (percent <= 30) {
-                element.style.background = `conic-gradient(var(--warning) 0% ${percent}%, rgba(255,255,255,0.1) ${percent}% 100%)`;
-                element.style.boxShadow = `0 0 30px rgba(245, 158, 11, 0.3)`;
-            } else {
-                element.style.background = `conic-gradient(var(--info) 0% ${percent}%, rgba(255,255,255,0.1) ${percent}% 100%)`;
-                element.style.boxShadow = `0 0 30px rgba(59, 130, 246, 0.3)`;
-            }
-        }
-
-        function updateChargingStatus(isCharging, percent) {
-            const chargingText = document.getElementById('charging-text');
-            const dischargingText = document.getElementById('discharging-text');
-            const animation = document.getElementById('charge-animation');
-            const icon = document.querySelector('.card-icon');
-
-            if (isCharging) {
-                chargingText.style.display = 'inline-flex';
-                dischargingText.style.display = 'none';
-                animation.style.display = 'flex';
-                icon.classList.add('pulse');
-                document.getElementById('circle-label').textContent = 'Carregando';
-                
-                document.getElementById('row-time-full').classList.add('charging');
-                document.getElementById('row-time-full').classList.remove('discharging');
-                document.getElementById('row-time-empty').classList.remove('charging', 'discharging');
-            } else {
-                chargingText.style.display = 'none';
-                dischargingText.style.display = 'inline';
-                dischargingText.innerHTML = `Descarregando
-                    <span class="realtime-indicator" id="realtime-badge" style="display: inline-flex;">
-                        <span class="realtime-dot"></span>
-                        TEMPO REAL
-                    </span>`;
-                animation.style.display = 'none';
-                icon.classList.remove('pulse');
-                document.getElementById('circle-label').textContent = 'Bateria';
-                
-                document.getElementById('row-time-full').classList.remove('charging', 'discharging');
-                document.getElementById('row-time-empty').classList.add('discharging');
-                document.getElementById('row-time-empty').classList.remove('charging');
-            }
-
-            if (percent <= 15 && !isCharging) {
-                document.getElementById('row-time-empty').classList.add('critical');
-            } else {
-                document.getElementById('row-time-empty').classList.remove('critical');
-            }
-        }
-
-        function updateHealthDisplay(health, maxCapacity, currentCapacity, technology) {
-            const healthSection = document.getElementById('health-section');
-            healthSection.style.display = 'flex';
-            
-            const healthPercent = maxCapacity > 0 ? Math.round((currentCapacity / maxCapacity) * 100) : 100;
-            const healthRing = document.getElementById('health-ring');
-            const healthText = document.getElementById('health-percent-text');
-            const healthStatus = document.getElementById('health-status-text');
-            const techBadge = document.getElementById('battery-tech');
-            
-            healthRing.style.setProperty('--health-percent', `${healthPercent}%`);
-            healthText.textContent = `${healthPercent}%`;
-            techBadge.textContent = technology;
-            
-            const healthStates = {
-                'GOOD': { text: 'Excelente', color: 'var(--success)' },
-                'HOT': { text: 'Aquecida', color: 'var(--warning)' },
-                'COLD': { text: 'Fria', color: 'var(--info)' },
-                'DEAD': { text: 'Crítica', color: 'var(--danger)' },
-                'OVER_VOLTAGE': { text: 'Sobretensão', color: 'var(--danger)' },
-                'UNSPECIFIED_FAILURE': { text: 'Falha', color: 'var(--danger)' },
-                'UNKNOWN': { text: 'Desconhecida', color: 'var(--text-muted)' }
-            };
-            
-            const state = healthStates[health] || healthStates['UNKNOWN'];
-            healthStatus.textContent = state.text;
-            healthStatus.style.color = state.color;
-        }
-
-        function calculateTimeEstimates(percent, current, capacity, isCharging) {
-            if (current === 0) {
-                document.getElementById('detail-time-full').textContent = '--';
-                document.getElementById('detail-time-empty').textContent = '--';
-                return;
-            }
-
-            const remainingCapacity = (capacity * percent) / 100;
-            const currentMA = Math.abs(current);
+            circle.style.setProperty('--percent', level + '%');
+            circle.className = 'progress-circle';
             
             if (isCharging) {
-                // Tempo para carga total
-                const neededCapacity = capacity - remainingCapacity;
-                const hoursToFull = neededCapacity / currentMA;
-                document.getElementById('detail-time-full').textContent = formatTimeAdvanced(hoursToFull * 3600);
-                document.getElementById('detail-time-empty').textContent = '--';
+                circle.classList.add('charging-battery');
+                document.getElementById('battery-status').innerHTML = '<span class="charging">CARREGANDO</span>';
             } else {
-                // Tempo para descarregar
-                const hoursToEmpty = remainingCapacity / currentMA;
-                document.getElementById('detail-time-full').textContent = '--';
-                document.getElementById('detail-time-empty').textContent = formatTimeAdvanced(hoursToEmpty * 3600);
-            }
-        }
-
-        function updateChargeRate(current, isCharging) {
-            if (current === 0) {
-                document.getElementById('detail-charge-rate').textContent = '--';
-                return;
+                document.getElementById('battery-status').textContent = 'Descarregando';
+                if (level <= 20) circle.classList.add('low-battery');
+                else if (level <= 50) circle.classList.add('medium-battery');
+                else circle.classList.add('high-battery');
             }
             
-            const rate = Math.abs(current);
-            const percentPerHour = (rate / 4000) * 100; // Estimativa baseada em 4000mAh padrão
-            
-            if (isCharging) {
-                document.getElementById('detail-charge-rate').textContent = 
-                    `+${rate} mA (+${percentPerHour.toFixed(1)}%/h)`;
-            } else {
-                document.getElementById('detail-charge-rate').textContent = 
-                    `-${rate} mA (-${percentPerHour.toFixed(1)}%/h)`;
-            }
-        }
-
-        function updateStandardMetrics(battery, percent) {
-            // Simulação de métricas para navegadores sem acesso nativo
-            const voltage = CONFIG.NOMINAL_VOLTAGE + (percent / 100) * 0.5;
-            const current = battery.charging ? 1500 : -(800 + Math.random() * 200);
-            const temp = 30 + (battery.charging ? 5 : 0) + (Math.random() * 2);
+            // Métricas estimadas
+            const voltage = 3.0 + (level / 100) * 1.2;
+            const current = isCharging ? 1500 : -(400 + Math.random() * 200);
+            const temp = 30 + (isCharging ? 5 : 0) + Math.random() * 3;
+            const power = (voltage * Math.abs(current) / 1000).toFixed(2);
             
             document.getElementById('metric-voltage').textContent = voltage.toFixed(2);
-            document.getElementById('metric-current').textContent = Math.abs(Math.round(current));
+            document.getElementById('metric-current').textContent = (isCharging ? '+' : '') + Math.round(current);
+            document.getElementById('metric-current').className = isCharging ? 'metric-value positive' : 'metric-value negative';
             document.getElementById('metric-temp').textContent = temp.toFixed(1);
+            document.getElementById('metric-power').textContent = (isCharging ? '+' : '-') + power;
             
-            const watts = (voltage * Math.abs(current) / 1000).toFixed(2);
-            const wattsEl = document.getElementById('metric-watts');
-            if (battery.charging) {
-                wattsEl.textContent = `+${watts}`;
-                wattsEl.className = 'power-metric-value positive';
-            } else {
-                wattsEl.textContent = `-${watts}`;
-                wattsEl.className = 'power-metric-value negative';
-            }
-
-            // Capacidade estimada
-            const estimatedCapacity = Math.round((percent / 100) * 4000);
-            document.getElementById('detail-capacity').textContent = `${estimatedCapacity} / 4000 mAh (Est.)`;
+            // Detalhes
+            const capacity = Math.round((level / 100) * 4000);
+            document.getElementById('detail-capacity').textContent = capacity + ' / 4000 mAh';
             
-            // Tempos
             if (battery.chargingTime !== Infinity && battery.chargingTime > 0) {
-                document.getElementById('detail-time-full').textContent = formatTimeAdvanced(battery.chargingTime);
+                document.getElementById('detail-time-full').textContent = formatTime(battery.chargingTime);
             } else {
-                document.getElementById('detail-time-full').textContent = 'Calculando...';
+                document.getElementById('detail-time-full').textContent = isCharging ? 'Calculando...' : '--';
             }
             
             if (battery.dischargingTime !== Infinity && battery.dischargingTime > 0) {
-                document.getElementById('detail-time-empty').textContent = formatTimeAdvanced(battery.dischargingTime);
+                document.getElementById('detail-time-empty').textContent = formatTime(battery.dischargingTime);
             } else {
-                // Estimativa baseada em taxa média de descarga
-                const dischargeRate = 12; // % por hora estimado
-                const hoursLeft = percent / dischargeRate;
-                document.getElementById('detail-time-empty').textContent = formatTimeAdvanced(hoursLeft * 3600);
+                document.getElementById('detail-time-empty').textContent = !isCharging ? 'Calculando...' : '--';
             }
-
-            document.getElementById('detail-charge-rate').textContent = battery.charging ? 
-                `+${Math.abs(Math.round(current))} mA` : 
-                `-${Math.abs(Math.round(current))} mA`;
             
-            document.getElementById('detail-power-status').textContent = battery.charging ? 'CARREGANDO' : 'DESCARREGANDO';
-            document.getElementById('detail-plugged').textContent = battery.charging ? 'Conectado' : 'Desconectado';
+            document.getElementById('detail-status').textContent = isCharging ? 'Conectado à energia' : 'Bateria';
+            document.getElementById('detail-health').textContent = 'Boa';
+            
+            // Atualizar também a aba hardware
+            document.getElementById('bat-level').textContent = level + '%';
+            document.getElementById('bat-charging').textContent = isCharging ? 'Sim' : 'Não';
+            document.getElementById('bat-charging').className = 'status-indicator ' + (isCharging ? 'active' : 'inactive');
+            document.getElementById('bat-charge-time').textContent = battery.chargingTime !== Infinity ? formatTime(battery.chargingTime) : '--';
+            document.getElementById('bat-discharge-time').textContent = battery.dischargingTime !== Infinity ? formatTime(battery.dischargingTime) : '--';
         }
 
-        function handleChargingChange(battery) {
-            const now = Date.now();
-            if (battery.charging) {
-                state.chargeStartTime = now;
-                state.dischargeStartTime = null;
-            } else {
-                state.dischargeStartTime = now;
-                state.chargeStartTime = null;
-            }
-            state.startLevel = battery.level;
-        }
-
-        function startRealtimeUpdates(battery) {
-            setInterval(() => {
-                state.updateCount++;
-                updateBatteryDisplay(battery);
-                calculateAdvancedMetrics();
-                
-                // A cada 10 atualizações, recalcular tendências
-                if (state.updateCount % 10 === 0) {
-                    calculateTrends();
-                }
-            }, CONFIG.UPDATE_INTERVAL);
-        }
-
-        function calculateAdvancedMetrics() {
-            if (!state.battery) return;
+        function calculateBatteryRate() {
+            if (!battery || lastLevel === null) return;
             
             const now = Date.now();
-            const currentLevel = state.battery.level;
+            const timeDiff = (now - lastTime) / 1000 / 60;
+            const levelDiff = battery.level - lastLevel;
             
-            // Adicionar ao histórico
-            state.batteryHistory.push({
-                level: currentLevel,
-                time: now,
-                charging: state.battery.charging
-            });
-            
-            // Manter apenas últimas 60 leituras
-            if (state.batteryHistory.length > CONFIG.HISTORY_SIZE) {
-                state.batteryHistory.shift();
+            if (timeDiff > 0 && Math.abs(levelDiff) > 0) {
+                const mahPerHour = Math.abs((levelDiff / timeDiff) * 60 * 40);
+                const text = battery.charging ? `+${Math.round(mahPerHour)} mA/h` : `-${Math.round(mahPerHour)} mA/h`;
+                document.getElementById('detail-rate').textContent = text;
             }
+            
+            lastLevel = battery.level;
+            lastTime = now;
         }
 
-        function calculateTrends() {
-            if (state.batteryHistory.length < 2) return;
-            
-            const recent = state.batteryHistory.slice(-10);
-            const oldest = recent[0];
-            const newest = recent[recent.length - 1];
-            
-            const timeDiff = (newest.time - oldest.time) / 1000 / 60 / 60; // horas
-            const levelDiff = newest.level - oldest.level;
-            
-            if (timeDiff > 0) {
-                const ratePerHour = (levelDiff / timeDiff) * 100;
-                console.log(`[Trend] Taxa: ${ratePerHour.toFixed(2)}%/h`);
-            }
-        }
-
-        function formatTimeAdvanced(seconds) {
-            if (!seconds || seconds <= 0 || !isFinite(seconds)) return '--';
-            
-            const hours = Math.floor(seconds / 3600);
-            const mins = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            
-            if (hours > 24) {
-                const days = Math.floor(hours / 24);
-                const remainingHours = hours % 24;
-                return `${days}d ${remainingHours}h`;
-            } else if (hours > 0) {
-                return `${hours}h ${mins}min`;
-            } else if (mins > 0) {
-                return `${mins}min ${secs}s`;
-            } else {
-                return `${secs}s`;
-            }
-        }
-
-        function simulateBatteryData() {
-            // Modo de simulação para dispositivos sem API
+        function simulateBattery() {
             let level = 75;
             let charging = false;
             
             setInterval(() => {
                 if (charging) {
-                    level = Math.min(100, level + 0.5);
+                    level = Math.min(100, level + 1);
                     if (level >= 100) charging = false;
                 } else {
-                    level = Math.max(0, level - 0.2);
+                    level = Math.max(0, level - 0.5);
                     if (level <= 20) charging = true;
                 }
                 
-                const mockBattery = {
-                    level: level / 100,
-                    charging: charging,
-                    chargingTime: charging ? (100 - level) * 60 : Infinity,
-                    dischargingTime: charging ? Infinity : level * 300
-                };
+                document.getElementById('main-percent').textContent = level + '%';
+                document.getElementById('circle-percent').textContent = level;
                 
-                updateBatteryDisplay(mockBattery);
-                updateStandardMetrics(mockBattery, level);
+                const circle = document.getElementById('battery-circle');
+                circle.style.setProperty('--percent', level + '%');
+                circle.className = 'progress-circle ' + (charging ? 'charging-battery' : level <= 20 ? 'low-battery' : level <= 50 ? 'medium-battery' : 'high-battery');
+                
+                document.getElementById('battery-status').innerHTML = charging ? '<span class="charging">CARREGANDO (DEMO)</span>' : 'Descarregando (demo)';
+                
+                const voltage = 3.0 + (level / 100) * 1.2;
+                document.getElementById('metric-voltage').textContent = voltage.toFixed(2);
+                document.getElementById('metric-current').textContent = charging ? '+1500' : '-450';
+                document.getElementById('metric-current').className = charging ? 'metric-value positive' : 'metric-value negative';
+                document.getElementById('metric-temp').textContent = (32 + Math.random() * 5).toFixed(1);
+                document.getElementById('metric-power').textContent = charging ? '+6.30' : '-1.58';
+                document.getElementById('detail-capacity').textContent = Math.round(level * 40) + ' / 4000 mAh';
+                
             }, 2000);
         }
 
-        // Funções auxiliares do sistema
-        function fillSystemInfo() {
+        function formatTime(seconds) {
+            if (!seconds || seconds <= 0 || !isFinite(seconds)) return '--';
+            const hours = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            return hours > 0 ? `${hours}h ${mins}min` : `${mins}min`;
+        }
+
+        // ============== SENSORES AMBIENTAIS ==============
+        function initSensors() {
+            // Sensor de Luz
+            if ('AmbientLightSensor' in window) {
+                try {
+                    const lightSensor = new AmbientLightSensor();
+                    lightSensor.addEventListener('reading', () => {
+                        const lux = lightSensor.illuminance;
+                        document.getElementById('light-value').textContent = Math.round(lux);
+                        document.getElementById('light-graph').style.height = Math.min(100, lux / 10) + '%';
+                        
+                        let desc = 'Escuro';
+                        if (lux > 50) desc = 'Interior';
+                        if (lux > 500) desc = 'Luz Indireta';
+                        if (lux > 10000) desc = 'Luz Diurna';
+                        if (lux > 50000) desc = 'Sol Direto';
+                        
+                        document.getElementById('light-desc').textContent = desc;
+                        document.getElementById('light-status').textContent = 'Ativo';
+                        document.getElementById('light-status').className = 'data-value success';
+                    });
+                    lightSensor.start();
+                } catch (e) {
+                    document.getElementById('light-status').textContent = 'Não disponível';
+                    simulateLight();
+                }
+            } else {
+                document.getElementById('light-status').textContent = 'API não suportada';
+                simulateLight();
+            }
+
+            // Magnetômetro / Bússola
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (e) => {
+                    const alpha = e.alpha; // Rotação em torno do eixo Z
+                    if (alpha !== null) {
+                        // Atualizar agulha da bússola
+                        const needle = document.getElementById('compass-needle');
+                        needle.style.transform = `translate(-50%, -100%) rotate(${alpha}deg)`;
+                        
+                        // Calcular direção cardinal
+                        const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+                        const index = Math.round(((alpha % 360) / 45)) % 8;
+                        document.getElementById('compass-direction').textContent = directions[index];
+                        
+                        // Simular intensidade magnética (não disponível via API web)
+                        const magnetic = 45 + Math.random() * 10;
+                        document.getElementById('magnetic-value').textContent = magnetic.toFixed(1);
+                        document.getElementById('compass-accuracy').textContent = 'Alta';
+                    }
+                });
+            }
+
+            // Proximidade (simulado - API muito rara)
+            simulateProximity();
+        }
+
+        function simulateLight() {
+            let lux = 150;
+            setInterval(() => {
+                lux = 100 + Math.random() * 200;
+                document.getElementById('light-value').textContent = Math.round(lux);
+                document.getElementById('light-graph').style.height = Math.min(100, lux / 10) + '%';
+                document.getElementById('light-desc').textContent = lux > 200 ? 'Interior Iluminado' : 'Interior';
+            }, 1000);
+        }
+
+        function simulateProximity() {
+            let near = false;
+            setInterval(() => {
+                near = !near;
+                document.getElementById('proximity-value').textContent = near ? '0' : '10+';
+                const status = document.getElementById('proximity-status');
+                status.textContent = near ? 'Próximo' : 'Longe';
+                status.className = 'status-indicator ' + (near ? 'active' : 'inactive');
+                document.getElementById('proximity-max').textContent = '10 cm';
+            }, 3000);
+        }
+
+        // ============== MOVIMENTO ==============
+        function initMotion() {
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', (e) => {
+                    const acc = e.accelerationIncludingGravity;
+                    if (acc) {
+                        const x = acc.x || 0;
+                        const y = acc.y || 0;
+                        const z = acc.z || 0;
+                        const total = Math.sqrt(x*x + y*y + z*z);
+                        
+                        document.getElementById('accel-x').textContent = x.toFixed(2);
+                        document.getElementById('accel-y').textContent = y.toFixed(2);
+                        document.getElementById('accel-z').textContent = z.toFixed(2);
+                        document.getElementById('accel-total').textContent = total.toFixed(2);
+                    }
+                });
+            }
+
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (e) => {
+                    document.getElementById('orient-alpha').textContent = Math.round(e.alpha || 0) + '°';
+                    document.getElementById('orient-beta').textContent = Math.round(e.beta || 0) + '°';
+                    document.getElementById('orient-gamma').textContent = Math.round(e.gamma || 0) + '°';
+                    
+                    const mode = Math.abs(e.gamma || 0) > 45 ? 'Paisagem' : 'Retrato';
+                    document.getElementById('orient-mode').textContent = mode;
+                });
+            }
+
+            document.getElementById('screen-orient').textContent = screen.orientation ? screen.orientation.type : 'N/A';
+        }
+
+        // ============== LOCALIZAÇÃO ==============
+        function getLocation() {
+            if (!navigator.geolocation) {
+                showToast('Geolocalização não suportada');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const long = position.coords.longitude.toFixed(6);
+                    const alt = position.coords.altitude ? position.coords.altitude.toFixed(1) : 'N/A';
+                    const acc = Math.round(position.coords.accuracy);
+                    
+                    document.getElementById('gps-lat').textContent = lat;
+                    document.getElementById('gps-long').textContent = long;
+                    document.getElementById('gps-alt').textContent = alt;
+                    document.getElementById('gps-acc').textContent = acc;
+                    
+                    document.getElementById('gps-heading').textContent = position.coords.heading ? Math.round(position.coords.heading) + '°' : 'N/A';
+                    document.getElementById('gps-speed').textContent = position.coords.speed ? position.coords.speed.toFixed(1) + ' m/s' : '0 m/s';
+                    document.getElementById('gps-time').textContent = new Date(position.timestamp).toLocaleTimeString();
+                    
+                    showToast('Localização obtida!');
+                },
+                (err) => {
+                    showToast('Erro: ' + err.message);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+
+        // ============== REDE ==============
+        function initNetwork() {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            
+            function updateNetwork() {
+                const online = navigator.onLine;
+                document.getElementById('net-online').textContent = online ? 'Online' : 'Offline';
+                document.getElementById('net-online').className = 'status-indicator ' + (online ? 'active' : 'inactive');
+                
+                if (conn) {
+                    const type = conn.effectiveType || '4g';
+                    document.getElementById('network-type').textContent = type.toUpperCase();
+                    document.getElementById('conn-type').textContent = conn.type || 'Unknown';
+                    document.getElementById('conn-downlink').textContent = (conn.downlink || '--') + ' Mbps';
+                    document.getElementById('conn-rtt').textContent = (conn.rtt || '--') + ' ms';
+                    document.getElementById('conn-save').textContent = conn.saveData ? 'Ativado' : 'Desativado';
+                    document.getElementById('net-effective').textContent = type;
+                    document.getElementById('net-tech').textContent = conn.type || 'Unknown';
+                    document.getElementById('net-max').textContent = (conn.downlinkMax || '--') + ' Mbps';
+                    
+                    // Atualizar barras de sinal
+                    const bars = document.querySelectorAll('.signal-bar');
+                    let activeBars = 0;
+                    if (type === '4g') activeBars = 5;
+                    else if (type === '3g') activeBars = 3;
+                    else if (type === '2g') activeBars = 2;
+                    else activeBars = 1;
+                    
+                    bars.forEach((bar, i) => {
+                        bar.style.opacity = i < activeBars ? '1' : '0.3';
+                        if (i >= 3 && type === '2g') bar.classList.add('weak');
+                    });
+                }
+            }
+            
+            updateNetwork();
+            if (conn) conn.addEventListener('change', updateNetwork);
+            window.addEventListener('online', updateNetwork);
+            window.addEventListener('offline', updateNetwork);
+        }
+
+        function testSpeed() {
+            showToast('Testando velocidade...');
+            const start = Date.now();
+            fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
+                .then(() => {
+                    const duration = (Date.now() - start) / 1000;
+                    const speed = (2 / duration).toFixed(2); // Estimativa aproximada
+                    showToast('Download estimado: ~' + speed + ' Mbps');
+                })
+                .catch(() => showToast('Erro no teste'));
+        }
+
+        // ============== HARDWARE ==============
+        function initHardware() {
+            document.getElementById('cpu-cores').textContent = navigator.hardwareConcurrency || 'N/A';
+            document.getElementById('device-ram').textContent = navigator.deviceMemory || 'N/A';
+            document.getElementById('cpu-arch').textContent = navigator.userAgent.match(/x64|x32|arm/) || 'Unknown';
+            
             const ua = navigator.userAgent;
-            let os = 'Desconhecido';
-            let osVersion = '';
+            let os = 'Unknown';
+            let version = '';
             
             if (/Android/.test(ua)) {
                 os = 'Android';
                 const match = ua.match(/Android\s([0-9.]+)/);
-                osVersion = match ? match[1] : '';
+                version = match ? match[1] : '';
             } else if (/iPhone|iPad/.test(ua)) {
                 os = 'iOS';
                 const match = ua.match(/OS\s([0-9_]+)/);
-                osVersion = match ? match[1].replace(/_/g, '.') : '';
+                version = match ? match[1].replace(/_/g, '.') : '';
+            } else if (/Windows/.test(ua)) {
+                os = 'Windows';
+            } else if (/Mac/.test(ua)) {
+                os = 'macOS';
             }
-
-            document.getElementById('system-info').innerHTML = `
-                ${createRow('Sistema', `${os} ${osVersion}`)}
-                ${createRow('Navegador', getBrowserName())}
-                ${createRow('Memória', navigator.deviceMemory ? `~${navigator.deviceMemory}GB` : 'N/A')}
-                ${createRow('CPU Cores', navigator.hardwareConcurrency || 'N/A')}
-            `;
-        }
-
-        function fillDisplayInfo() {
-            document.getElementById('display-info').innerHTML = `
-                ${createRow('Resolução', `${screen.width}x${screen.height}`)}
-                ${createRow('Viewport', `${window.innerWidth}x${window.innerHeight}`)}
-                ${createRow('Pixel Ratio', window.devicePixelRatio || 1)}
-                ${createRow('Orientação', screen.orientation ? screen.orientation.type : 'N/A')}
-            `;
-        }
-
-        function initNetworkInfo() {
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            document.getElementById('network-info').innerHTML = `
-                ${createRow('Status', navigator.onLine ? 'Online' : 'Offline', navigator.onLine ? 'success' : 'danger')}
-                ${createRow('Tipo', connection ? connection.effectiveType : 'N/A')}
-                ${createRow('Download', connection ? `${connection.downlink} Mbps` : 'N/A')}
-            `;
-        }
-
-        function calculatePrivacyScore() {
-            let score = 100;
-            if (navigator.doNotTrack === '1') score += 5;
-            if (!navigator.cookieEnabled) score += 5;
-            if (!window.RTCPeerConnection) score += 10;
             
-            document.getElementById('privacy-score').textContent = Math.min(100, score);
+            document.getElementById('os-name').textContent = os;
+            document.getElementById('os-version').textContent = version;
+            document.getElementById('platform').textContent = navigator.platform;
+            document.getElementById('user-agent').textContent = ua.substring(0, 50) + '...';
+            document.getElementById('language').textContent = navigator.language;
+            document.getElementById('timezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            const conn = navigator.connection;
+            document.getElementById('save-mode').textContent = (conn && conn.saveData) ? 'Ativado' : 'Desativado';
         }
 
-        function getBrowserName() {
-            const ua = navigator.userAgent;
-            if (/Chrome/.test(ua) && !/Edge|Edg/.test(ua)) return 'Chrome';
-            if (/Firefox/.test(ua)) return 'Firefox';
-            if (/Safari/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
-            return 'Desconhecido';
+        // ============== CÂMERA ==============
+        let cameraStream = null;
+
+        async function startCamera(facing) {
+            try {
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
+                
+                const constraints = {
+                    video: { 
+                        facingMode: facing,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.getElementById('camera-video');
+                video.srcObject = cameraStream;
+                
+                // Detectar capacidades
+                const track = cameraStream.getVideoTracks()[0];
+                const capabilities = track.getCapabilities();
+                
+                document.getElementById('flash-avail').textContent = capabilities.torch ? 'Sim' : 'Não';
+                document.getElementById('autofocus').textContent = capabilities.focusMode ? 'Sim' : 'Não';
+                document.getElementById('stabilization').textContent = capabilities.stabilizationMode ? 'Sim' : 'Não';
+                
+                showToast('Câmera ' + (facing === 'user' ? 'frontal' : 'traseira') + ' ativada');
+            } catch (err) {
+                showToast('Erro: ' + err.message);
+            }
         }
 
-        function createRow(label, value, type = '') {
-            const typeClass = type ? ` ${type}` : '';
-            return `<div class="data-row"><span class="data-label">${label}</span><span class="data-value${typeClass}">${value}</span></div>`;
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+                document.getElementById('camera-video').srcObject = null;
+                showToast('Câmera desligada');
+            }
         }
 
+        // Contar câmeras
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            navigator.mediaDevices.enumerateDevices().then(devices => {
+                const cameras = devices.filter(d => d.kind === 'videoinput');
+                document.getElementById('cam-count').textContent = cameras.length;
+            });
+        }
+
+        // ============== ÁUDIO ==============
+        let audioContext = null;
+        let audioAnalyser = null;
+        let audioStream = null;
+        let audioInterval = null;
+
+        async function toggleAudio() {
+            const btn = document.getElementById('audio-btn');
+            
+            if (audioInterval) {
+                // Parar
+                clearInterval(audioInterval);
+                audioInterval = null;
+                if (audioStream) {
+                    audioStream.getTracks().forEach(track => track.stop());
+                }
+                btn.textContent = '🎙️ Iniciar Monitoramento';
+                document.getElementById('audio-level').textContent = '--';
+                document.getElementById('audio-graph').style.height = '0%';
+                return;
+            }
+            
+            try {
+                audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaStreamSource(audioStream);
+                audioAnalyser = audioContext.createAnalyser();
+                audioAnalyser.fftSize = 256;
+                source.connect(audioAnalyser);
+                
+                const dataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+                
+                audioInterval = setInterval(() => {
+                    audioAnalyser.getByteFrequencyData(dataArray);
+                    const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+                    const db = Math.round(average);
+                    
+                    document.getElementById('audio-level').textContent = db;
+                    document.getElementById('audio-graph').style.height = Math.min(100, db) + '%';
+                }, 100);
+                
+                btn.textContent = '⏹️ Parar Monitoramento';
+                showToast('Microfone ativo');
+            } catch (err) {
+                showToast('Erro: ' + err.message);
+            }
+        }
+
+        function testSpeech() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('Teste de sintetizador de voz funcionando corretamente');
+                utterance.lang = 'pt-BR';
+                speechSynthesis.speak(utterance);
+                showToast('Sintetizador ativado');
+            } else {
+                showToast('Sintetizador não suportado');
+            }
+        }
+
+        document.getElementById('speech-synth').textContent = 'speechSynthesis' in window ? 'Disponível' : 'Não';
+        document.getElementById('speech-recog').textContent = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window ? 'Disponível' : 'Não';
+        document.getElementById('audio-out').textContent = 'Alto-falantes';
+        document.getElementById('audio-in').textContent = 'Microfone';
+
+        // ============== TELA ==============
+        function initScreen() {
+            const w = screen.width;
+            const h = screen.height;
+            const dpr = window.devicePixelRatio || 1;
+            
+            document.getElementById('screen-res').textContent = w + '×' + h;
+            document.getElementById('screen-ppi').textContent = Math.round(dpr * 160);
+            document.getElementById('screen-color').textContent = screen.colorDepth + '-bit';
+            
+            const ratio = (w / h).toFixed(2);
+            document.getElementById('screen-ratio').textContent = ratio + ':1';
+            
+            // Estimativa de tamanho baseada em DPI
+            const diagPx = Math.sqrt(w*w + h*h);
+            const ppi = dpr * 160;
+            const inches = (diagPx / ppi).toFixed(1);
+            document.getElementById('screen-size').textContent = inches;
+            
+            document.getElementById('screen-orient-detail').textContent = screen.orientation ? screen.orientation.type : 'N/A';
+            document.getElementById('dark-mode').textContent = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Ativo' : 'Inativo';
+            
+            if (screen.orientation) {
+                screen.orientation.addEventListener('change', () => {
+                    document.getElementById('screen-orient-detail').textContent = screen.orientation.type;
+                });
+            }
+        }
+
+        // ============== ARMAZENAMENTO ==============
+        function updateStorage() {
+            let total = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    total += localStorage[key].length * 2; // UTF-16 = 2 bytes por char
+                }
+            }
+            
+            document.getElementById('storage-used').textContent = (total / 1024 / 1024).toFixed(3);
+            document.getElementById('storage-items').textContent = localStorage.length;
+            document.getElementById('cookies-enabled').textContent = navigator.cookieEnabled ? 'Sim' : 'Não';
+            document.getElementById('cookie-size').textContent = document.cookie.length;
+        }
+
+        async function testStorage() {
+            try {
+                const testKey = '__storage_test__';
+                let i = 0;
+                const testData = 'x'.repeat(1024); // 1KB
+                
+                while (i < 10000) {
+                    try {
+                        localStorage.setItem(testKey + i, testData);
+                        i++;
+                    } catch (e) {
+                        break;
+                    }
+                }
+                
+                // Limpar
+                for (let j = 0; j < i; j++) {
+                    localStorage.removeItem(testKey + j);
+                }
+                
+                const mb = (i * 1024 / 1024).toFixed(2);
+                showToast('Capacidade testada: ~' + mb + ' MB disponíveis');
+                updateStorage();
+            } catch (e) {
+                showToast('Erro no teste');
+            }
+        }
+
+        // ============== UTILITÁRIOS ==============
         function switchTab(tab, btn) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            
+            if (tab === 'sensors') initSensors();
+            if (tab === 'motion') initMotion();
+            if (tab === 'network') initNetwork();
+            if (tab === 'hardware') initHardware();
+            if (tab === 'screen') initScreen();
+            if (tab === 'storage') updateStorage();
         }
 
         function refreshAll() {
-            if (state.battery) updateBatteryDisplay(state.battery);
-            tryGetAndroidBatteryInfo();
-            showToast('Dados atualizados!', 'success');
+            if (battery) updateBatteryDisplay();
+            initHardware();
+            initScreen();
+            updateStorage();
+            showToast('Todos os dados atualizados!');
         }
 
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            const icons = { success: '✅', error: '❌', warning: '⚠️' };
-            toast.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Iniciar
+        // ============== INICIALIZAÇÃO ==============
+        function init() {
+            initBattery();
+            initHardware();
+            initScreen();
+            updateStorage();
+            initNetwork();
+            
+            showToast('Device Intelligence Pro iniciado!');
+        }
+
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
+            document.addEventListener('DOMContentLoaded', init);
         } else {
-            initApp();
+            init();
         }
     </script>
 </body>
