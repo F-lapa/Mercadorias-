@@ -200,13 +200,13 @@
             padding: 15px;
         }
 
-        /* SISTEMA - NOVOS ESTILOS */
+        /* SISTEMA - ESTILOS ATUALIZADOS (SEM ARMAZENAMENTO) */
         .system-hero {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(245, 158, 11, 0.1));
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(236, 72, 153, 0.1));
             border-radius: 20px;
             padding: 25px 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            border: 1px solid rgba(245, 158, 11, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -218,7 +218,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
             animation: pulse-bg 4s ease-in-out infinite;
         }
 
@@ -237,7 +237,7 @@
             font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 5px;
-            background: linear-gradient(135deg, #fff, #a78bfa);
+            background: linear-gradient(135deg, #fff, #fbbf24);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -247,10 +247,9 @@
             color: var(--text-muted);
         }
 
-        .dual-gauge-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .gauge-container {
+            display: flex;
+            justify-content: center;
             margin-top: 20px;
             position: relative;
             z-index: 1;
@@ -261,8 +260,8 @@
         }
 
         .gauge-svg {
-            width: 140px;
-            height: 140px;
+            width: 180px;
+            height: 180px;
             margin: 0 auto;
             position: relative;
         }
@@ -282,7 +281,6 @@
             transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .gauge-storage { stroke: var(--storage); }
         .gauge-memory { stroke: var(--memory); }
 
         .gauge-center {
@@ -294,23 +292,34 @@
         }
 
         .gauge-percent {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 800;
             line-height: 1;
+            color: var(--memory);
         }
 
-        .gauge-percent.storage { color: var(--storage); }
-        .gauge-percent.memory { color: var(--memory); }
-
         .gauge-label {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 4px;
         }
 
         .gauge-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 5px;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 10px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
         }
 
         .usage-bar-container {
@@ -351,6 +360,7 @@
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            background: linear-gradient(90deg, #d97706, #f59e0b);
         }
 
         .usage-bar-fill::after {
@@ -368,9 +378,6 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-
-        .usage-bar-fill.storage { background: linear-gradient(90deg, #7c3aed, #8b5cf6); }
-        .usage-bar-fill.memory { background: linear-gradient(90deg, #d97706, #f59e0b); }
 
         .stats-grid {
             display: grid;
@@ -394,7 +401,6 @@
             margin-bottom: 4px;
         }
 
-        .stat-value.storage { color: var(--storage); }
         .stat-value.memory { color: var(--memory); }
 
         .stat-label {
@@ -432,8 +438,6 @@
             border-radius: 50%;
         }
 
-        .detail-dot.used { background: var(--storage); }
-        .detail-dot.free { background: #10b981; }
         .detail-dot.app { background: var(--memory); }
         .detail-dot.system { background: #3b82f6; }
 
@@ -463,7 +467,7 @@
             padding: 12px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(135deg, var(--storage), var(--primary));
+            background: linear-gradient(135deg, var(--memory), var(--secondary));
             color: white;
             font-size: 0.9rem;
             font-weight: 600;
@@ -476,7 +480,7 @@
 
         .refresh-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
         }
 
         .refresh-btn:active {
@@ -499,27 +503,6 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        .info-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .info-badge.storage {
-            background: rgba(139, 92, 246, 0.2);
-            color: #a78bfa;
-        }
-
-        .info-badge.memory {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
         }
 
         /* BATERIA - ESTILOS ORIGINAIS */
@@ -1031,9 +1014,8 @@
             .speed-gauge { width: 150px; height: 150px; }
             .gauge-speed { font-size: 2rem; }
             .speed-results { grid-template-columns: 1fr; }
-            .dual-gauge-container { gap: 10px; }
-            .gauge-svg { width: 120px; height: 120px; }
-            .gauge-percent { font-size: 1.5rem; }
+            .gauge-svg { width: 150px; height: 150px; }
+            .gauge-percent { font-size: 2rem; }
         }
     </style>
 </head>
@@ -1206,113 +1188,29 @@
             </div>
         </div>
 
-        <!-- ABA SISTEMA (NOVA) -->
+        <!-- ABA SISTEMA (ATUALIZADA - SEM ARMAZENAMENTO) -->
         <div class="tab-content" id="tab-system">
             <div class="system-hero">
                 <div class="system-header">
-                    <div class="system-title">💾 Armazenamento & Memória</div>
-                    <div class="system-subtitle">Uso em tempo real do sistema</div>
+                    <div class="system-title">🧠 Memória do Sistema</div>
+                    <div class="system-subtitle">Uso em tempo real da RAM</div>
                 </div>
 
-                <div class="dual-gauge-container">
-                    <!-- Gauge Armazenamento -->
+                <div class="gauge-container">
                     <div class="gauge-wrapper">
                         <div class="gauge-svg">
-                            <svg viewBox="0 0 140 140">
-                                <circle class="gauge-bg" cx="70" cy="70" r="58"/>
-                                <circle class="gauge-progress gauge-storage" id="storage-gauge" cx="70" cy="70" r="58" 
-                                    stroke-dasharray="364" stroke-dashoffset="364"/>
-                            </svg>
-                            <div class="gauge-center">
-                                <div class="gauge-icon">💾</div>
-                                <div class="gauge-percent storage" id="storage-percent">0%</div>
-                                <div class="gauge-label">Usado</div>
-                            </div>
-                        </div>
-                        <div class="info-badge storage" id="storage-badge">Calculando...</div>
-                    </div>
-
-                    <!-- Gauge Memória -->
-                    <div class="gauge-wrapper">
-                        <div class="gauge-svg">
-                            <svg viewBox="0 0 140 140">
-                                <circle class="gauge-bg" cx="70" cy="70" r="58"/>
-                                <circle class="gauge-progress gauge-memory" id="memory-gauge" cx="70" cy="70" r="58" 
-                                    stroke-dasharray="364" stroke-dashoffset="364"/>
+                            <svg viewBox="0 0 180 180">
+                                <circle class="gauge-bg" cx="90" cy="90" r="78"/>
+                                <circle class="gauge-progress gauge-memory" id="memory-gauge" cx="90" cy="90" r="78" 
+                                    stroke-dasharray="490" stroke-dashoffset="490"/>
                             </svg>
                             <div class="gauge-center">
                                 <div class="gauge-icon">🧠</div>
-                                <div class="gauge-percent memory" id="memory-percent">0%</div>
+                                <div class="gauge-percent" id="memory-percent">0%</div>
                                 <div class="gauge-label">Usada</div>
                             </div>
                         </div>
-                        <div class="info-badge memory" id="memory-badge">Calculando...</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Barra de Armazenamento -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon" style="background: rgba(139, 92, 246, 0.2);">💾</div>
-                    <div class="card-title-group">
-                        <h3>Armazenamento Interno</h3>
-                        <p>Espaço total e disponível</p>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="usage-bar-container">
-                        <div class="usage-bar-header">
-                            <span class="usage-bar-label">
-                                <span>📦 Usado</span>
-                            </span>
-                            <span class="usage-bar-value" id="storage-text">0 GB / 0 GB</span>
-                        </div>
-                        <div class="usage-bar-bg">
-                            <div class="usage-bar-fill storage" id="storage-bar" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value storage" id="storage-used">--</div>
-                            <div class="stat-label">Usado</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" style="color: #10b981;" id="storage-free">--</div>
-                            <div class="stat-label">Livre</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" style="color: var(--text);" id="storage-total">--</div>
-                            <div class="stat-label">Total</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value storage" id="storage-apps">--</div>
-                            <div class="stat-label">Apps</div>
-                        </div>
-                    </div>
-
-                    <div class="detail-list">
-                        <div class="detail-row">
-                            <div class="detail-left">
-                                <div class="detail-dot used"></div>
-                                <div class="detail-info">
-                                    <span class="detail-name">Dados do Sistema</span>
-                                    <span class="detail-sub">Sistema operacional</span>
-                                </div>
-                            </div>
-                            <span class="detail-size" id="detail-system-size">--</span>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-left">
-                                <div class="detail-dot free"></div>
-                                <div class="detail-info">
-                                    <span class="detail-name">Espaço Disponível</span>
-                                    <span class="detail-sub">Para fotos, vídeos e apps</span>
-                                </div>
-                            </div>
-                            <span class="detail-size" style="color: #10b981;" id="detail-free-size">--</span>
-                        </div>
+                        <div class="info-badge" id="memory-badge">Calculando...</div>
                     </div>
                 </div>
             </div>
@@ -1335,7 +1233,7 @@
                             <span class="usage-bar-value" id="memory-text">0 GB / 0 GB</span>
                         </div>
                         <div class="usage-bar-bg">
-                            <div class="usage-bar-fill memory" id="memory-bar" style="width: 0%"></div>
+                            <div class="usage-bar-fill" id="memory-bar" style="width: 0%"></div>
                         </div>
                     </div>
 
@@ -1406,12 +1304,12 @@
                             <span class="data-value accent" id="device-cores">--</span>
                         </div>
                         <div class="data-row">
-                            <span class="data-label">Armazenamento Persistente</span>
-                            <span class="data-value" id="storage-persist">--</span>
+                            <span class="data-label">User Agent</span>
+                            <span class="data-value" style="font-size: 0.7rem;" id="device-ua">--</span>
                         </div>
                         <div class="data-row">
-                            <span class="data-label">Quota de Origem</span>
-                            <span class="data-value" id="storage-quota">--</span>
+                            <span class="data-label">Plataforma</span>
+                            <span class="data-value" id="device-platform">--</span>
                         </div>
                     </div>
                 </div>
@@ -1847,14 +1745,10 @@
             }, 5000);
         }
 
-        // ============== SISTEMA (NOVO) ==============
-        let systemStats = {
-            storage: { used: 0, total: 0 },
-            memory: { used: 0, total: 0, js: 0 }
-        };
-
-        async function initSystem() {
-            await updateSystemStats();
+        // ============== SISTEMA (ATUALIZADO - APENAS MEMÓRIA) ==============
+        function initSystem() {
+            updateMemoryStats();
+            updateDeviceInfo();
             // Atualiza a cada 5 segundos se a aba estiver ativa
             setInterval(() => {
                 if (document.getElementById('tab-system').classList.contains('active')) {
@@ -1863,84 +1757,9 @@
             }, 5000);
         }
 
-        async function updateSystemStats() {
-            await updateStorageStats();
-            updateMemoryStats();
-            updateDeviceInfo();
-        }
-
-        async function updateStorageStats() {
-            try {
-                if ('storage' in navigator && 'estimate' in navigator.storage) {
-                    const estimate = await navigator.storage.estimate();
-                    const used = estimate.usage || 0;
-                    const total = estimate.quota || 0;
-                    
-                    systemStats.storage.used = used;
-                    systemStats.storage.total = total;
-                    
-                    const usedGB = (used / 1024 / 1024 / 1024).toFixed(1);
-                    const totalGB = (total / 1024 / 1024 / 1024).toFixed(1);
-                    const freeGB = (totalGB - usedGB).toFixed(1);
-                    const percent = total > 0 ? Math.round((used / total) * 100) : 0;
-                    
-                    // Animação do gauge
-                    const circumference = 364;
-                    const offset = circumference - (percent / 100) * circumference;
-                    document.getElementById('storage-gauge').style.strokeDashoffset = offset;
-                    
-                    // Atualiza textos com animação de contador
-                    animateValue('storage-percent', 0, percent, 1000, '%');
-                    document.getElementById('storage-badge').textContent = `${percent}% Usado`;
-                    
-                    // Barra de progresso
-                    document.getElementById('storage-bar').style.width = percent + '%';
-                    document.getElementById('storage-text').textContent = `${usedGB} GB / ${totalGB} GB`;
-                    
-                    // Stats grid
-                    document.getElementById('storage-used').textContent = usedGB + ' GB';
-                    document.getElementById('storage-free').textContent = freeGB + ' GB';
-                    document.getElementById('storage-total').textContent = totalGB + ' GB';
-                    
-                    // Estima apps (aproximadamente 30% do usado)
-                    const appsGB = (usedGB * 0.3).toFixed(1);
-                    document.getElementById('storage-apps').textContent = '~' + appsGB + ' GB';
-                    
-                    // Detalhes
-                    document.getElementById('detail-system-size').textContent = '~' + (totalGB * 0.15).toFixed(1) + ' GB';
-                    document.getElementById('detail-free-size').textContent = freeGB + ' GB';
-                    
-                } else {
-                    throw new Error('Storage API não suportada');
-                }
-            } catch (e) {
-                // Fallback para valores simulados realistas
-                const totalGB = 128;
-                const usedGB = 87;
-                const percent = 68;
-                
-                document.getElementById('storage-gauge').style.strokeDashoffset = 364 - (percent / 100) * 364;
-                animateValue('storage-percent', 0, percent, 1000, '%');
-                document.getElementById('storage-badge').textContent = `${percent}% Usado (Estimado)`;
-                
-                document.getElementById('storage-bar').style.width = percent + '%';
-                document.getElementById('storage-text').textContent = `${usedGB} GB / ${totalGB} GB`;
-                document.getElementById('storage-used').textContent = usedGB + ' GB';
-                document.getElementById('storage-free').textContent = (totalGB - usedGB) + ' GB';
-                document.getElementById('storage-total').textContent = totalGB + ' GB';
-                document.getElementById('storage-apps').textContent = '~26 GB';
-            }
-        }
-
         function updateMemoryStats() {
             // Memória do dispositivo (Chrome/Android)
             const deviceMemory = navigator.deviceMemory || 4; // GB padrão
-            
-            // Memória JS do navegador (se disponível)
-            if (performance && performance.memory) {
-                systemStats.memory.js = performance.memory.usedJSHeapSize;
-                systemStats.memory.total = performance.memory.totalJSHeapSize;
-            }
             
             // Simula uso realista de RAM baseado no deviceMemory
             const totalRAM = deviceMemory;
@@ -1949,12 +1768,26 @@
             const usedRAM = Math.min(totalRAM * 0.7, baseUsage + (deviceMemory * 0.15));
             const percent = Math.round((usedRAM / totalRAM) * 100);
             
-            const circumference = 364;
+            const circumference = 490;
             const offset = circumference - (percent / 100) * circumference;
             document.getElementById('memory-gauge').style.strokeDashoffset = offset;
             
             animateValue('memory-percent', 0, percent, 1000, '%');
-            document.getElementById('memory-badge').textContent = percent > 80 ? '⚠️ Alto' : percent > 50 ? '✓ Normal' : '✓ Leve';
+            
+            const badge = document.getElementById('memory-badge');
+            if (percent > 80) {
+                badge.textContent = '⚠️ Alto';
+                badge.style.background = 'rgba(239, 68, 68, 0.2)';
+                badge.style.color = '#f87171';
+            } else if (percent > 50) {
+                badge.textContent = '✓ Normal';
+                badge.style.background = 'rgba(245, 158, 11, 0.2)';
+                badge.style.color = '#fbbf24';
+            } else {
+                badge.textContent = '✓ Leve';
+                badge.style.background = 'rgba(16, 185, 129, 0.2)';
+                badge.style.color = '#34d399';
+            }
             
             // Barra
             document.getElementById('memory-bar').style.width = percent + '%';
@@ -1979,24 +1812,8 @@
             
             document.getElementById('device-memory').textContent = memory !== 'Desconhecido' ? `~${memory} GB` : memory;
             document.getElementById('device-cores').textContent = cores !== 'Desconhecido' ? `${cores} cores` : cores;
-            
-            // Storage persistence
-            if ('storage' in navigator && 'persist' in navigator.storage) {
-                navigator.storage.persisted().then(persisted => {
-                    document.getElementById('storage-persist').textContent = persisted ? '✓ Persistente' : 'Não persistente';
-                });
-            } else {
-                document.getElementById('storage-persist').textContent = 'N/A';
-            }
-            
-            // Quota
-            if ('storage' in navigator && 'estimate' in navigator.storage) {
-                navigator.storage.estimate().then(estimate => {
-                    const quota = estimate.quota || 0;
-                    const quotaGB = (quota / 1024 / 1024 / 1024).toFixed(1);
-                    document.getElementById('storage-quota').textContent = quota > 0 ? `${quotaGB} GB` : 'Ilimitado';
-                });
-            }
+            document.getElementById('device-ua').textContent = navigator.userAgent.substring(0, 50) + '...';
+            document.getElementById('device-platform').textContent = navigator.platform || 'Desconhecido';
         }
 
         function animateValue(id, start, end, duration, suffix = '') {
@@ -2027,7 +1844,8 @@
             btn.classList.add('spinning');
             btn.disabled = true;
             
-            await updateSystemStats();
+            updateMemoryStats();
+            updateDeviceInfo();
             
             setTimeout(() => {
                 btn.classList.remove('spinning');
@@ -2289,7 +2107,10 @@
             document.getElementById('tab-' + tab).classList.add('active');
             
             if (tab === 'network') initNetwork();
-            if (tab === 'system') updateSystemStats();
+            if (tab === 'system') {
+                updateMemoryStats();
+                updateDeviceInfo();
+            }
         }
 
         function refreshAll() {
